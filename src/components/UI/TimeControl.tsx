@@ -1,10 +1,12 @@
 import { useMemo, memo } from "react";
 import { useSimulation } from "../../context/SimulationContext";
+import { useLanguage } from "../../context/LanguageContext";
 
-const SPEED_STEPS = [0.1, 0.25, 0.5, 1, 2, 5, 10];
+const SPEED_STEPS = [0, 0.25, 0.5, 1, 2, 5, 10];
 
 export const TimeControl = memo(() => {
   const { timeScale, setTimeScale, isPaused, togglePause } = useSimulation();
+  const { t } = useLanguage();
 
   const sliderIndex = useMemo(
     () => Math.max(0, SPEED_STEPS.indexOf(timeScale)),
@@ -12,20 +14,22 @@ export const TimeControl = memo(() => {
   );
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-zinc-950/95 backdrop-blur-xl border border-zinc-700 shadow-2xl rounded-3xl px-6 py-3 flex items-center gap-4">
+    <div className="pointer-events-auto fixed bottom-3 left-1/2 z-40 flex max-w-[min(100vw-1rem,22rem)] -translate-x-1/2 items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-950/95 px-3 py-2 shadow-2xl backdrop-blur-xl sm:bottom-6 sm:max-w-none sm:gap-3 sm:rounded-3xl sm:px-5 sm:py-3 md:bottom-8 md:gap-4 md:px-6">
       {/* Play / Pause Button */}
       <button
         onClick={togglePause}
-        className="w-10 h-10 flex items-center justify-center text-3xl text-white hover:text-yellow-400 transition-colors"
-        aria-label={isPaused ? "Resume simulation" : "Pause simulation"}
-        title={isPaused ? "Resume" : "Pause"}
+        className="flex h-8 w-8 shrink-0 items-center justify-center text-2xl text-white transition-colors hover:text-yellow-400 sm:h-10 sm:w-10 sm:text-3xl"
+        aria-label={isPaused ? t("resume") : t("pause")}
+        title={isPaused ? t("resume") : t("pause")}
       >
         {isPaused ? "▶" : "⏸"}
       </button>
 
       {/* Speed Control */}
-      <div className="flex items-center gap-3">
-        <span className="text-xs uppercase tracking-widest font-medium text-zinc-400">SPEED</span>
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
+        <span className="hidden shrink-0 text-xs font-medium uppercase tracking-widest text-zinc-400 sm:inline">
+          {t("speed")}
+        </span>
 
         <input
           type="range"
@@ -35,10 +39,10 @@ export const TimeControl = memo(() => {
           value={sliderIndex}
           onChange={(e) => setTimeScale(SPEED_STEPS[Number(e.target.value)])}
           disabled={isPaused}
-          className="w-48 accent-yellow-400 bg-zinc-800 h-2 rounded-full cursor-pointer"
+          className="h-2 min-w-0 w-full flex-1 cursor-pointer rounded-full bg-zinc-800 accent-yellow-400 sm:w-48 sm:flex-none sm:max-w-none md:w-48"
         />
 
-        <span className="font-mono text-lg font-semibold text-white min-w-[38px] text-right">
+        <span className="shrink-0 text-right font-mono text-sm font-semibold tabular-nums text-white sm:text-lg sm:min-w-[2.5rem]">
           {timeScale}×
         </span>
       </div>

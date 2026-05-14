@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface FloatingMenuButtonProps {
   onClick: () => void;
@@ -9,30 +10,36 @@ interface FloatingMenuButtonProps {
 }
 
 function getIcon(hasPlanetSelected: boolean, isOpen: boolean): string {
-  if (hasPlanetSelected) {
-    return isOpen ? "▾" : "▴";   // Panel mode
-  }
+  if (hasPlanetSelected) return isOpen ? "▾" : "▴";
   return isOpen ? "✕" : "🪐";    // Drawer mode
 }
 
-function getLabel(hasPlanetSelected: boolean, isOpen: boolean): string {
+function getLabel(
+  hasPlanetSelected: boolean,
+  isOpen: boolean,
+  t: ReturnType<typeof useLanguage>["t"]
+): string {
   if (hasPlanetSelected) {
-    return isOpen ? "Hide planet info" : "Show planet info";
+    return isOpen ? t("hidePlanetInfo") : t("showPlanetInfo");
   }
-  return isOpen ? "Close planet menu" : "Open planet menu";
+  return isOpen ? t("aboutClose") : t("openPlanetMenu");
 }
 
 export const FloatingMenuButton = memo(
-  ({ onClick, isOpen, hasPlanetSelected }: FloatingMenuButtonProps) => (
-    <button
-      onClick={onClick}
-      aria-label={getLabel(hasPlanetSelected, isOpen)}
-      aria-expanded={isOpen}
-      className="fixed bottom-8 right-8 z-[60] w-14 h-14 flex items-center justify-center text-3xl rounded-3xl bg-zinc-900 hover:bg-yellow-500 active:scale-95 transition-all shadow-2xl shadow-black/50 border border-zinc-700 hover:border-yellow-400 text-white hover:text-zinc-950"
-    >
-      <span className="transition-transform duration-200">
-        {getIcon(hasPlanetSelected, isOpen)}
-      </span>
-    </button>
-  )
+  ({ onClick, isOpen, hasPlanetSelected }: FloatingMenuButtonProps) => {
+    const { t } = useLanguage();
+
+    return (
+      <button
+        onClick={onClick}
+        aria-label={getLabel(hasPlanetSelected, isOpen, t)}
+        aria-expanded={isOpen}
+        className={`fixed left-4 top-20 z-[60] pointer-events-auto h-12 min-w-12 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/90 px-3 text-2xl text-white shadow-2xl shadow-black/50 backdrop-blur-md transition-all hover:border-yellow-400 hover:text-yellow-300 active:scale-95 md:hidden ${hasPlanetSelected && isOpen ? "max-md:hidden" : "flex"}`}
+      >
+        <span className="transition-transform duration-200">
+          {getIcon(hasPlanetSelected, isOpen)}
+        </span>
+      </button>
+    );
+  }
 );

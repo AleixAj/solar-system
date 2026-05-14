@@ -4,8 +4,8 @@ import { Lights } from "./components/Scene/Lights";
 import { Sun } from "./components/Scene/Sun";
 import { Planet } from "./components/Scene/Planet";
 import { Orbit } from "./components/Scene/Orbit";
+import { StarField } from "./components/Scene/StarField";
 import { Header } from "./components/UI/Header";
-import { Attribution } from "./components/UI/Attribution";
 import { FloatingMenuButton } from "./components/UI/FloatingMenuButton";
 import { PlanetDrawer } from "./components/UI/PlanetDrawer";
 import { LoadingOverlay } from "./components/UI/LoadingScreen";
@@ -22,17 +22,23 @@ const TimeControl = lazy(() =>
 );
 
 import { planets } from "./data/planets";
+import { useLanguage } from "./context/LanguageContext";
 import { usePlanetSelection } from "./hooks/usePlanetSelection";
 import { getOrbitRadius } from "./utils/orbitUtils";
 import type { Planet as PlanetType } from "./types/planet";
 
 function App() {
+  const { getPlanetName, t } = useLanguage();
   const { selectedPlanet, selectPlanet, deselectPlanet } = usePlanetSelection();
   const [overviewTrigger, setOverviewTrigger] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [panelVisible, setPanelVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);   // ← Nuevo estado
 
+  const sun = useMemo(
+    () => planets.find((p) => p.type === "star") ?? planets[0],
+    []
+  );
   const planetsToRender = useMemo(
     () => planets.filter((p) => p.type !== "star"),
     []
@@ -76,8 +82,9 @@ function App() {
         className="absolute inset-0"
       >
         <Suspense fallback={null}>
+          <StarField />
           <Lights />
-          <Sun />
+          <Sun sun={sun} onSelect={handleSelectPlanet} />
           {planetsToRender.map((planet) => (
             <Orbit
               key={`orbit-${planet.id}`}
@@ -101,14 +108,18 @@ function App() {
 
         <Suspense fallback={null}>
           <PlanetNavigation
-            planets={planetsToRender}
+            planets={planets}
             selectedPlanet={selectedPlanet}
             onSelectPlanet={handleSelectPlanet}
             onOverview={handleOverview}
           />
 
           {selectedPlanet && panelVisible && (
-            <PlanetInfo planet={selectedPlanet} onClose={handleDeselectPlanet} />
+            <PlanetInfo
+              planet={selectedPlanet}
+              onCollapse={() => setPanelVisible(false)}
+              onClose={handleDeselectPlanet}
+            />
           )}
 
           <TimeControl />
@@ -124,17 +135,17 @@ function App() {
           isOpen={drawerOpen}
           onClose={() => setDrawerOpen(false)}
           onSelectPlanet={handleSelectPlanet}
-          planets={planetsToRender}
+          planets={planets}
           selectedPlanet={selectedPlanet}
         />
-
-        <Attribution />
       </div>
 
       <AboutModal isOpen={aboutOpen} onClose={() => setAboutOpen(false)} />
 
       <div aria-live="polite" aria-atomic="true" className="sr-only">
-        {selectedPlanet ? `Viewing ${selectedPlanet.name}` : "Overview — all planets"}
+        {selectedPlanet
+          ? `${t("viewing")} ${getPlanetName(selectedPlanet)}`
+          : `${t("overview")} — ${t("solarSystem")}`}
       </div>
     </div>
   );

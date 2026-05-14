@@ -1,5 +1,6 @@
 import { memo } from "react";
 import type { Planet } from "../../types/planet";
+import { useLanguage } from "../../context/LanguageContext";
 
 interface PlanetNavigationProps {
   planets: Planet[];
@@ -14,28 +15,36 @@ export const PlanetNavigation = memo(({
   onSelectPlanet,
   onOverview,
 }: PlanetNavigationProps) => {
+  const { getPlanetName, t } = useLanguage();
+
   return (
     <nav
-      className="fixed left-0 top-16 bottom-0 w-72 bg-zinc-950/95 backdrop-blur-md border-r border-zinc-800 z-40 flex flex-col"
+      className="fixed left-0 top-16 bottom-0 w-72 pointer-events-auto bg-zinc-950/95 backdrop-blur-md border-r border-zinc-800 z-40 hidden md:flex flex-col"
       aria-label="Planet navigation"
     >
       {/* Current planet / Header */}
-      <div className="px-6 py-5 border-b border-zinc-800 flex items-center gap-3">
-        {selectedPlanet ? (
-          <>
-            <div
-              className="w-4 h-4 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-zinc-950"
-              style={{ backgroundColor: selectedPlanet.baseColor }}
-            />
-            <span className="text-lg font-semibold text-white">
-              {selectedPlanet.name}
+      <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between gap-3">
+        <div className="min-w-0 flex items-center gap-3">
+          {selectedPlanet ? (
+            <>
+              <div
+                className="w-4 h-4 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-zinc-950"
+                style={{ backgroundColor: selectedPlanet.baseColor }}
+              />
+              <span className="truncate text-lg font-semibold text-white">
+                {getPlanetName(selectedPlanet)}
+              </span>
+            </>
+          ) : (
+            <span className="truncate text-lg font-semibold text-zinc-400">
+              {t('solarSystem')}
             </span>
-          </>
-        ) : (
-          <span className="text-lg font-semibold text-zinc-400">
-            Solar System
-          </span>
-        )}
+          )}
+        </div>
+
+        <span className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-500">
+          ☉
+        </span>
       </div>
 
       {/* Overview Button */}
@@ -48,7 +57,7 @@ export const PlanetNavigation = memo(({
         }`}
       >
         <span className="text-xl">☀️</span>
-        <span className="font-medium">Overview</span>
+        <span className="font-medium">{t('overview')}</span>
       </button>
 
       {/* Planets List */}
@@ -79,7 +88,7 @@ export const PlanetNavigation = memo(({
                   isActive ? "text-white" : "text-zinc-300 group-hover:text-white"
                 }`}
               >
-                {planet.name}
+                {getPlanetName(planet)}
               </span>
             </button>
           );
@@ -88,7 +97,7 @@ export const PlanetNavigation = memo(({
 
       {/* Footer sutil */}
       <div className="p-4 text-xs text-zinc-500 text-center border-t border-zinc-800">
-        Click to explore
+        {t('clickToExplore')}
       </div>
     </nav>
   );

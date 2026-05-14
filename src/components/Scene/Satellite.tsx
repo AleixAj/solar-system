@@ -20,6 +20,16 @@ interface SatelliteMeshProps {
   segments?: number;
 }
 
+function getInitialOrbitAngle(name: string): number {
+  let hash = 0;
+
+  for (let i = 0; i < name.length; i += 1) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  }
+
+  return (hash / 0xffffffff) * Math.PI * 2;
+}
+
 /** Inner mesh that loads and applies the satellite texture via Suspense. */
 const SatelliteTexturedMesh = ({ satellite, onHover, segments = 16 }: SatelliteMeshProps) => {
   const texture = useTexture(satellite.texturePath!);
@@ -72,7 +82,7 @@ const SatelliteFallbackMesh = ({ satellite, onHover, segments = 16 }: SatelliteM
  * axial tilt group.
  */
 export const Satellite = memo(({ satellite, planetSize, isSelected }: SatelliteProps) => {
-  const angleRef = useRef<number>(Math.random() * Math.PI * 2);
+  const angleRef = useRef<number>(getInitialOrbitAngle(satellite.name));
   const groupRef = useRef<Group>(null);
   const { timeScale } = useSimulation();
   const isMobile = useIsMobile();

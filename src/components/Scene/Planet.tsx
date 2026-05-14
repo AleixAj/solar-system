@@ -6,6 +6,7 @@ import type { Planet as PlanetType } from "../../types/planet";
 import { planets } from "../../data/planets";
 import { getOrbitRadius } from "../../utils/orbitUtils";
 import { useSimulation } from "../../context/SimulationContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { Satellite } from "./Satellite";
 import { Orbit } from "./Orbit";
@@ -180,48 +181,52 @@ const SaturnRing = memo(({ planetRadius }: { planetRadius: number }) => {
 });
 
 /** Tooltip shown on hover above the planet. */
-const PlanetTooltip = memo(({ planet }: { planet: PlanetType }) => (
-  <Html
-    center
-    position={[0, planet.relativeSize + 1.8, 0]}
-    style={{ pointerEvents: "none" }}
-  >
-    <div
-      style={{
-        background: "rgba(8, 14, 30, 0.92)",
-        border: `1px solid ${planet.baseColor}55`,
-        borderRadius: "8px",
-        padding: "6px 12px",
-        backdropFilter: "blur(10px)",
-        whiteSpace: "nowrap",
-        textAlign: "center",
-        boxShadow: `0 0 12px ${planet.baseColor}33`,
-        userSelect: "none",
-      }}
+const PlanetTooltip = memo(({ planet }: { planet: PlanetType }) => {
+  const { getPlanetName } = useLanguage();
+
+  return (
+    <Html
+      center
+      position={[0, planet.relativeSize + 1.8, 0]}
+      style={{ pointerEvents: "none" }}
     >
       <div
         style={{
-          color: planet.baseColor,
-          fontWeight: 700,
-          fontSize: "13px",
-          letterSpacing: "0.04em",
+          background: "rgba(8, 14, 30, 0.92)",
+          border: `1px solid ${planet.baseColor}55`,
+          borderRadius: "8px",
+          padding: "6px 12px",
+          backdropFilter: "blur(10px)",
+          whiteSpace: "nowrap",
+          textAlign: "center",
+          boxShadow: `0 0 12px ${planet.baseColor}33`,
+          userSelect: "none",
         }}
       >
-        {planet.name}
+        <div
+          style={{
+            color: planet.baseColor,
+            fontWeight: 700,
+            fontSize: "13px",
+            letterSpacing: "0.04em",
+          }}
+        >
+          {getPlanetName(planet)}
+        </div>
+        <div
+          style={{
+            color: "rgba(255,255,255,0.55)",
+            fontSize: "11px",
+            fontFamily: "monospace",
+            marginTop: "2px",
+          }}
+        >
+          ⌀ {planet.diameter.toLocaleString()} km
+        </div>
       </div>
-      <div
-        style={{
-          color: "rgba(255,255,255,0.55)",
-          fontSize: "11px",
-          fontFamily: "monospace",
-          marginTop: "2px",
-        }}
-      >
-        ⌀ {planet.diameter.toLocaleString()} km
-      </div>
-    </div>
-  </Html>
-));
+    </Html>
+  );
+});
 
 export const Planet = memo(
   ({ planet, index, onSelect, isSelected }: PlanetComponentProps) => {
