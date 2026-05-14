@@ -7,6 +7,8 @@ interface PlanetNavigationProps {
   selectedPlanet: Planet | null;
   onSelectPlanet: (planet: Planet) => void;
   onOverview: () => void;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
 }
 
 export const PlanetNavigation = memo(({
@@ -14,37 +16,54 @@ export const PlanetNavigation = memo(({
   selectedPlanet,
   onSelectPlanet,
   onOverview,
+  collapsed,
+  onToggleCollapsed,
 }: PlanetNavigationProps) => {
   const { getPlanetName, t } = useLanguage();
 
   return (
-    <nav
-      className="fixed left-0 top-16 bottom-0 w-72 pointer-events-auto bg-zinc-950/95 backdrop-blur-md border-r border-zinc-800 z-40 hidden md:flex flex-col"
-      aria-label="Planet navigation"
-    >
+    <>
+      <nav
+        id="planet-navigation-panel"
+        aria-hidden={collapsed}
+        inert={collapsed}
+        aria-label={t("planetNavAria")}
+        className={`pointer-events-auto fixed bottom-0 left-0 top-20 z-40 hidden w-72 flex-col border-r border-zinc-800 bg-zinc-950/95 backdrop-blur-md transition-transform duration-300 ease-out md:flex ${
+          collapsed ? "-translate-x-full" : "translate-x-0"
+        }`}
+      >
       {/* Current planet / Header */}
-      <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between gap-3">
-        <div className="min-w-0 flex items-center gap-3">
+      <div className="flex min-h-[3.5rem] shrink-0 items-center justify-between gap-3 border-b border-zinc-800 py-2.5 pl-4 pr-3">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           {selectedPlanet ? (
             <>
               <div
-                className="w-4 h-4 rounded-full flex-shrink-0 ring-2 ring-offset-2 ring-offset-zinc-950"
+                className="h-4 w-4 shrink-0 self-center rounded-full ring-2 ring-offset-2 ring-offset-zinc-950"
                 style={{ backgroundColor: selectedPlanet.baseColor }}
               />
-              <span className="truncate text-lg font-semibold text-white">
+              <span className="truncate text-lg font-semibold leading-snug text-white">
                 {getPlanetName(selectedPlanet)}
               </span>
             </>
           ) : (
-            <span className="truncate text-lg font-semibold text-zinc-400">
+            <span className="truncate text-lg font-semibold leading-snug text-zinc-400">
               {t('solarSystem')}
             </span>
           )}
         </div>
 
-        <span className="inline-flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-500">
-          ☉
-        </span>
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          aria-label={t("collapseSidebar")}
+          aria-expanded={!collapsed}
+          aria-controls="planet-navigation-panel"
+          className="flex h-9 w-9 shrink-0 items-center justify-center self-center rounded-xl border border-zinc-500 bg-zinc-800 text-zinc-100 shadow-sm transition-colors hover:border-yellow-400/70 hover:bg-zinc-700 hover:text-yellow-300"
+        >
+          <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 6l-6 6 6 6" />
+          </svg>
+        </button>
       </div>
 
       {/* Overview Button */}
@@ -96,9 +115,23 @@ export const PlanetNavigation = memo(({
       </div>
 
       {/* Footer sutil */}
-      <div className="p-4 text-xs text-zinc-500 text-center border-t border-zinc-800">
+      <div className="border-t border-zinc-800 p-4 text-center text-xs text-zinc-500">
         {t('clickToExplore')}
       </div>
     </nav>
+
+      {collapsed && (
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          aria-label={t("expandSidebar")}
+          aria-expanded={false}
+          aria-controls="planet-navigation-panel"
+          className="pointer-events-auto fixed left-0 top-20 z-[45] hidden h-12 w-9 items-center justify-center rounded-r-xl border border-l-0 border-zinc-500 bg-zinc-800/95 text-xl leading-none text-yellow-400 shadow-md backdrop-blur-sm transition-colors hover:border-yellow-400/60 hover:bg-zinc-700 hover:text-yellow-300 md:flex"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+      )}
+    </>
   );
 });

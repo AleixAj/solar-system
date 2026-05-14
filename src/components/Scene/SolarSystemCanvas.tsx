@@ -67,7 +67,7 @@ export const SolarSystemCanvas = ({
         onClick={onBackgroundClick}
       >
         <planeGeometry args={[10000, 10000]} />
-        <meshBasicMaterial transparent opacity={0} />
+        <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false} />
       </mesh>
 
       {/* Children components will be rendered here */}

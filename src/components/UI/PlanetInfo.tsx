@@ -29,7 +29,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
   const distanceMkm = (planet.distanceFromSun / 1e6).toFixed(1);
 
   return (
-    <div className="pointer-events-auto fixed inset-x-0 top-16 bottom-0 z-[60] flex w-full flex-col overflow-hidden border-l border-zinc-700 bg-zinc-950/95 shadow-2xl backdrop-blur-xl md:left-auto md:right-0 md:w-96 md:max-w-none">
+    <div className="pointer-events-auto fixed inset-x-0 top-20 bottom-0 z-[60] flex w-full flex-col overflow-hidden border-l border-zinc-700 bg-zinc-950/95 shadow-2xl backdrop-blur-xl md:left-auto md:right-0 md:w-96 md:max-w-none">
       {/* Header */}
       <div
         className="flex items-center gap-3 border-b px-4 py-4 sm:px-6 sm:py-5 sm:gap-4"

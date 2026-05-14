@@ -6,6 +6,7 @@ import { Planet } from "./components/Scene/Planet";
 import { Orbit } from "./components/Scene/Orbit";
 import { StarField } from "./components/Scene/StarField";
 import { Header } from "./components/UI/Header";
+import { ShootingStarOverlay } from "./components/UI/ShootingStarOverlay";
 import { FloatingMenuButton } from "./components/UI/FloatingMenuButton";
 import { PlanetDrawer } from "./components/UI/PlanetDrawer";
 import { LoadingOverlay } from "./components/UI/LoadingScreen";
@@ -34,6 +35,7 @@ function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [panelVisible, setPanelVisible] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);   // ← Nuevo estado
+  const [navCollapsed, setNavCollapsed] = useState(false);
 
   const sun = useMemo(
     () => planets.find((p) => p.type === "star") ?? planets[0],
@@ -103,6 +105,8 @@ function App() {
         </Suspense>
       </SolarSystemCanvas>
 
+      <ShootingStarOverlay />
+
       <div className="absolute inset-0 pointer-events-none">
         <Header onOpenAbout={() => setAboutOpen(true)} />   {/* ← Añadido prop */}
 
@@ -112,6 +116,8 @@ function App() {
             selectedPlanet={selectedPlanet}
             onSelectPlanet={handleSelectPlanet}
             onOverview={handleOverview}
+            collapsed={navCollapsed}
+            onToggleCollapsed={() => setNavCollapsed((c) => !c)}
           />
 
           {selectedPlanet && panelVisible && (

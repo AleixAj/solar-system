@@ -14,11 +14,13 @@ type TranslationKey =
   | "aboutViewCode"
   | "center"
   | "clickToExplore"
+  | "collapseSidebar"
   | "craftedBy"
   | "craftedWith"
   | "diameter"
   | "didYouKnow"
   | "distanceFromSun"
+  | "expandSidebar"
   | "hidePlanetInfo"
   | "interactiveSimulation"
   | "knownMoons"
@@ -28,6 +30,7 @@ type TranslationKey =
   | "overview"
   | "pause"
   | "physicalData"
+  | "planetNavAria"
   | "resume"
   | "rotationSpeed"
   | "satellites"
@@ -43,17 +46,19 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     aboutButton: "About this project",
     aboutClose: "Close",
     aboutDuration: "Project scope:",
-    aboutLearned: "What this project demonstrates",
+    aboutLearned: "General structure",
     aboutProject: "About this project",
     aboutTech: "Technologies",
     aboutViewCode: "View code on GitHub",
     center: "Center",
     clickToExplore: "Click to explore",
+    collapseSidebar: "Hide sidebar",
     craftedBy: "by",
     craftedWith: "Crafted with",
     diameter: "Diameter",
     didYouKnow: "Did you know?",
     distanceFromSun: "Distance from Sun",
+    expandSidebar: "Show sidebar",
     hidePlanetInfo: "Hide planet info",
     interactiveSimulation: "Interactive 3D Simulation",
     knownMoons: "Known Moons",
@@ -63,6 +68,7 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     overview: "Overview",
     pause: "Pause simulation",
     physicalData: "Physical Data",
+    planetNavAria: "Planets and overview navigation",
     resume: "Resume simulation",
     rotationSpeed: "Rotation Speed",
     satellites: "Satellites",
@@ -77,17 +83,19 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     aboutButton: "Sobre el proyecto",
     aboutClose: "Cerrar",
     aboutDuration: "Alcance del proyecto:",
-    aboutLearned: "Qué demuestra este proyecto",
+    aboutLearned: "Estructura general",
     aboutProject: "Sobre este proyecto",
     aboutTech: "Tecnologías",
     aboutViewCode: "Ver código en GitHub",
     center: "Centro",
     clickToExplore: "Haz click para explorar",
+    collapseSidebar: "Ocultar panel lateral",
     craftedBy: "por",
     craftedWith: "Hecho con",
     diameter: "Diámetro",
     didYouKnow: "¿Sabías que?",
     distanceFromSun: "Distancia al Sol",
+    expandSidebar: "Mostrar panel lateral",
     hidePlanetInfo: "Ocultar información",
     interactiveSimulation: "Simulación 3D interactiva",
     knownMoons: "Lunas conocidas",
@@ -97,6 +105,7 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     overview: "Vista general",
     pause: "Pausar simulación",
     physicalData: "Datos físicos",
+    planetNavAria: "Navegación: planetas y vista general",
     resume: "Reanudar simulación",
     rotationSpeed: "Velocidad de rotación",
     satellites: "Satélites",
