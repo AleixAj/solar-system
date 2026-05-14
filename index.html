@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Primary meta -->
+    <title>Solar System 3D</title>
+    <meta name="description" content="Interactive 3D Solar System simulation built with Three.js and React. Explore all 8 planets, learn their key data, and navigate through space." />
+    <meta name="author" content="Sanghel González" />
+    <meta name="keywords" content="solar system, 3D, Three.js, React, planets, interactive, simulation, space" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://solar-system-3d-opal.vercel.app" />
+    <meta property="og:title" content="Solar System 3D" />
+    <meta property="og:description" content="Interactive 3D Solar System simulation built with Three.js and React. Explore all 8 planets, learn their key data, and navigate through space." />
+    <meta property="og:site_name" content="Solar System 3D" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Solar System 3D" />
+    <meta name="twitter:description" content="Interactive 3D Solar System simulation built with Three.js and React. Explore all 8 planets and navigate through space." />
+    <meta name="twitter:creator" content="@sanghel" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://solar-system-3d-opal.vercel.app" />
+
+    <!-- Preload critical asset -->
+    <link rel="preload" href="/textures/sun.jpg" as="image" />
+  </head>
+  <body>
+    <!-- Pre-React loading indicator — visible immediately (before JS downloads).
+         Hidden by LoadingOverlay as soon as React mounts. Gives Lighthouse an
+         instant First Contentful Paint instead of waiting for WebGL init. -->
+    <div id="pre-loader" style="position:fixed;inset:0;background:#000011;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;font-family:monospace">
+      <p style="color:#ffffff;font-size:22px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin:0">Solar System</p>
+      <p style="color:rgba(255,255,255,.45);font-size:11px;letter-spacing:.08em;margin:0">Loading simulation…</p>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

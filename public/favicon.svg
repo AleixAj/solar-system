@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <!-- Ring back half: clip to top of center -->
+    <clipPath id="ring-back">
+      <rect x="0" y="0" width="32" height="16"/>
+    </clipPath>
+    <!-- Ring front half: clip to bottom of center -->
+    <clipPath id="ring-front">
+      <rect x="0" y="16" width="32" height="16"/>
+    </clipPath>
+    <!-- Radial gradient for planet depth -->
+    <radialGradient id="planet-grad" cx="38%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#F5A84A"/>
+      <stop offset="60%" stop-color="#D97B2A"/>
+      <stop offset="100%" stop-color="#A85010"/>
+    </radialGradient>
+    <!-- Ring gradient -->
+    <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#D4B060" stop-opacity="0.5"/>
+      <stop offset="35%" stop-color="#E8D090" stop-opacity="0.9"/>
+      <stop offset="65%" stop-color="#E8D090" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#D4B060" stop-opacity="0.5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Ring: back half (behind planet) -->
+  <ellipse cx="16" cy="16" rx="14.5" ry="4.5"
+    fill="none"
+    stroke="url(#ring-grad)"
+    stroke-width="3"
+    clip-path="url(#ring-back)"
+    opacity="0.6"/>
+
+  <!-- Planet body -->
+  <circle cx="16" cy="16" r="9.5" fill="url(#planet-grad)"/>
+
+  <!-- Subtle surface band -->
+  <ellipse cx="16" cy="18" rx="9.5" ry="1.6" fill="#8B3E0A" opacity="0.2"/>
+
+  <!-- Ring: front half (in front of planet) -->
+  <ellipse cx="16" cy="16" rx="14.5" ry="4.5"
+    fill="none"
+    stroke="url(#ring-grad)"
+    stroke-width="3"
+    clip-path="url(#ring-front)"/>
+</svg>
