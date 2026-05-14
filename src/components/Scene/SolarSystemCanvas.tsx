@@ -12,6 +12,7 @@ interface SolarSystemCanvasProps {
   onBackgroundClick?: () => void;
   selectedPlanet: Planet | null;
   overviewTrigger: number;
+  className?: string;
 }
 
 export const SolarSystemCanvas = ({
@@ -19,6 +20,7 @@ export const SolarSystemCanvas = ({
   onBackgroundClick,
   selectedPlanet,
   overviewTrigger,
+  className,
 }: SolarSystemCanvasProps) => {
   const backgroundRef = useRef<Mesh>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -29,6 +31,7 @@ export const SolarSystemCanvas = ({
 
   return (
     <Canvas
+      className={className}
       camera={cameraConfig}
       dpr={[1, 2]}
       style={{

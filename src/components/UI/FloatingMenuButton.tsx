@@ -1,5 +1,4 @@
 import { memo } from "react";
-import "./FloatingMenuButton.css";
 
 interface FloatingMenuButtonProps {
   onClick: () => void;
@@ -11,11 +10,9 @@ interface FloatingMenuButtonProps {
 
 function getIcon(hasPlanetSelected: boolean, isOpen: boolean): string {
   if (hasPlanetSelected) {
-    // Panel mode: chevron signals collapse/expand
-    return isOpen ? "▾" : "▴";
+    return isOpen ? "▾" : "▴";   // Panel mode
   }
-  // Drawer mode
-  return isOpen ? "✕" : "🪐";
+  return isOpen ? "✕" : "🪐";    // Drawer mode
 }
 
 function getLabel(hasPlanetSelected: boolean, isOpen: boolean): string {
@@ -25,23 +22,15 @@ function getLabel(hasPlanetSelected: boolean, isOpen: boolean): string {
   return isOpen ? "Close planet menu" : "Open planet menu";
 }
 
-/**
- * Circular floating action button shown only on mobile.
- *
- * Two modes:
- * - Drawer mode (no planet selected): opens/closes the PlanetDrawer.
- * - Panel mode (planet selected): shows/hides the PlanetInfo panel without
- *   deselecting the planet, so the 3D view stays unobstructed.
- */
 export const FloatingMenuButton = memo(
   ({ onClick, isOpen, hasPlanetSelected }: FloatingMenuButtonProps) => (
     <button
-      className={`fab${isOpen ? " fab--open" : ""}${hasPlanetSelected ? " fab--panel-mode" : ""}`}
       onClick={onClick}
       aria-label={getLabel(hasPlanetSelected, isOpen)}
       aria-expanded={isOpen}
+      className="fixed bottom-8 right-8 z-[60] w-14 h-14 flex items-center justify-center text-3xl rounded-3xl bg-zinc-900 hover:bg-yellow-500 active:scale-95 transition-all shadow-2xl shadow-black/50 border border-zinc-700 hover:border-yellow-400 text-white hover:text-zinc-950"
     >
-      <span className="fab__icon" aria-hidden="true">
+      <span className="transition-transform duration-200">
         {getIcon(hasPlanetSelected, isOpen)}
       </span>
     </button>
