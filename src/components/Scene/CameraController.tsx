@@ -104,7 +104,7 @@ export function CameraController({
       minDistance: Math.max(selectedPlanet.relativeSize * 1.5, 5),
       maxDistance: lateral * 4,
     });
-  }, [selectedPlanet, scene, moveTo, resetView]);
+  }, [controlsRef, selectedPlanet, scene, moveTo, resetView]);
 
   useEffect(() => {
     if (overviewTrigger === 0) return;
@@ -113,7 +113,7 @@ export function CameraController({
     alignmentGapRef.current = null;
     if (controlsRef.current) controlsRef.current.autoRotate = true;
     resetView();
-  }, [overviewTrigger, resetView]);
+  }, [controlsRef, overviewTrigger, resetView]);
 
   useFrame((_, delta) => {
     const animationJustEnded = wasAnimatingRef.current && !isAnimating;

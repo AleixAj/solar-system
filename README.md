@@ -6,7 +6,6 @@
 ![Three.js](https://img.shields.io/badge/Three.js-0.183-000000?style=flat&logo=threedotjs&logoColor=white)
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-9-61dafb?style=flat&logo=react&logoColor=111111)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38bdf8?style=flat&logo=tailwindcss&logoColor=white)
-![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2-000000?style=flat&logo=vercel&logoColor=white)
 
 Sistema Solar 3D interactivo construido como proyecto web personal.
 
@@ -51,7 +50,6 @@ Objetivos principales:
 - React Three Fiber
 - @react-three/drei
 - Tailwind CSS
-- Vercel Analytics
 
 ## Aspectos técnicos destacados
 
@@ -92,8 +90,8 @@ src/
 ```bash
 git clone https://github.com/AleixAj/solar-system.git
 cd solar-system
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Abre `http://localhost:5173`.
@@ -101,9 +99,9 @@ Abre `http://localhost:5173`.
 Comandos útiles:
 
 ```bash
-npm run lint
-npm run build
-npm run preview
+pnpm lint
+pnpm build
+pnpm preview
 ```
 
 ## Roadmap
