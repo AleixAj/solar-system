@@ -4,7 +4,7 @@ import { Lights } from "./components/Scene/Lights";
 import { Sun } from "./components/Scene/Sun";
 import { Planet } from "./components/Scene/Planet";
 import { Orbit } from "./components/Scene/Orbit";
-import { StarField } from "./components/Scene/StarField";
+import { SpaceBackdrop } from "./components/Scene/SpaceBackdrop";
 import { Header } from "./components/UI/Header";
 import { ShootingStarOverlay } from "./components/UI/ShootingStarOverlay";
 import { FloatingMenuButton } from "./components/UI/FloatingMenuButton";
@@ -29,16 +29,18 @@ const AboutModal = lazy(() =>
 import { planets } from "./data/planets";
 import { useLanguage } from "./context/LanguageContext";
 import { usePlanetSelection } from "./hooks/usePlanetSelection";
+import { useIsMobile } from "./hooks/useIsMobile";
 import { getOrbitRadius } from "./utils/orbitUtils";
 import type { Planet as PlanetType } from "./types/planet";
 
 function App() {
   const { getPlanetName, language, t } = useLanguage();
   const { selectedPlanet, selectPlanet, deselectPlanet } = usePlanetSelection();
+  const isMobile = useIsMobile();
   const [overviewTrigger, setOverviewTrigger] = useState(0);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [panelVisible, setPanelVisible] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);   // ← Nuevo estado
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [navCollapsed, setNavCollapsed] = useState(false);
   const [tourActive, setTourActive] = useState(false);
   const [tourPaused, setTourPaused] = useState(false);
@@ -60,9 +62,9 @@ function App() {
   // Keeping this in one callback prevents UI layers from drifting out of sync.
   const focusPlanet = useCallback((planet: PlanetType) => {
     selectPlanet(planet);
-    setPanelVisible(true);
+    setPanelVisible(!isMobile);
     setDrawerOpen(false);
-  }, [selectPlanet]);
+  }, [isMobile, selectPlanet]);
 
   const handleSelectPlanet = useCallback((planet: PlanetType) => {
     // Manual selection takes control away from the guided tour.
@@ -96,8 +98,6 @@ function App() {
   const startTour = useCallback(() => {
     setTourActive(true);
     setTourPaused(false);
-    // Collapse the desktop sidebar to give the 3D scene a more cinematic frame.
-    setNavCollapsed(true);
     focusTourStep(0);
   }, [focusTourStep]);
 
@@ -188,7 +188,7 @@ function App() {
         className="absolute inset-0"
       >
         <Suspense fallback={null}>
-          <StarField />
+          <SpaceBackdrop />
           <Lights />
           <Sun sun={sun} onSelect={handleSelectPlanet} />
           {planetsToRender.map((planet) => (
@@ -260,6 +260,7 @@ function App() {
           isOpen={fabIsActive}
           hasPlanetSelected={!!selectedPlanet}
           onClick={handleFabClick}
+          onOpenPlanetMenu={() => setDrawerOpen(true)}
         />
 
         <PlanetDrawer
@@ -269,6 +270,21 @@ function App() {
           planets={planets}
           selectedPlanet={selectedPlanet}
         />
+
+        <a
+          href="https://aleixaj.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Abrir portfolio de Aleix"
+          className="pointer-events-auto fixed bottom-3 right-3 z-30 flex h-11 w-11 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/80 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-400/70 hover:bg-zinc-900 active:scale-95 md:hidden"
+        >
+          <img
+            src="/AJ.png"
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-contain"
+          />
+        </a>
       </div>
 
       <Suspense fallback={null}>

@@ -76,7 +76,7 @@ export function CameraController({
       prevPlanetPosRef.current = null;
       trackedPlanetIdRef.current = null;
       alignmentGapRef.current = null;
-      if (controlsRef.current) controlsRef.current.autoRotate = true;
+      if (controlsRef.current) controlsRef.current.autoRotate = false;
       resetView();
       return;
     }
@@ -111,7 +111,7 @@ export function CameraController({
     prevPlanetPosRef.current = null;
     trackedPlanetIdRef.current = null;
     alignmentGapRef.current = null;
-    if (controlsRef.current) controlsRef.current.autoRotate = true;
+    if (controlsRef.current) controlsRef.current.autoRotate = false;
     resetView();
   }, [controlsRef, overviewTrigger, resetView]);
 

@@ -23,7 +23,7 @@ Objetivos principales:
 - Mantener una interfaz limpia, responsive y fácil de navegar en desktop y móvil.
 - Estructurar el código con componentes reutilizables, datos tipados y hooks específicos.
 - Resolver la interacción entre UI DOM, contenido WebGL, overlays y controles de cámara.
-- Dejar el proyecto preparado para futuras mejoras como más detalle de lunas, modos de cámara cinematográficos y microinteracciones avanzadas.
+- Dejar el proyecto preparado para futuras mejoras visuales sin depender de modelos 3D pesados.
 
 ## Características
 
@@ -31,11 +31,12 @@ Objetivos principales:
 - Sol y planetas seleccionables, con transiciones de cámara y paneles contextuales.
 - Tour guiado/cinemático para recorrer automáticamente los principales astros.
 - Panel lateral desktop con navegación por astros, estado activo y modo colapsable.
-- Drawer móvil y botón flotante para navegar sin ocupar pantalla.
+- Drawer móvil y botones flotantes para abrir la lista de planetas o el panel de información bajo demanda.
 - Panel de información por planeta con datos físicos, movimiento, lunas conocidas y curiosidades.
 - Tooltips en escena con datos rápidos.
 - Control de velocidad temporal de `0x` a `10x`, con `0.25x` como valor inicial.
-- Campo de estrellas lejanas y cometas fugaces sutiles en overlay CSS.
+- Fondo espacial texturizado con una imagen optimizada, cometas fugaces sutiles en overlay CSS y logo móvil enlazado al portfolio.
+- Realismo visual ligero con texturas, materiales por tipo de planeta, atmósferas sutiles, halo solar difuminado y anillos de Saturno por bandas.
 - Selector de idioma ES/EN con preferencia persistente.
 - Modal "Sobre el proyecto" con tecnologías, estructura general y enlaces.
 - UI oscura y responsive construida con Tailwind CSS.
@@ -55,17 +56,20 @@ Objetivos principales:
 
 - Arquitectura de UI basada en componentes React.
 - Modelado de datos tipado para planetas, satélites y contenido traducible.
-- Composición de escena 3D con meshes, materiales, texturas, estrellas, órbitas y controles de cámara.
+- Composición de escena 3D con meshes, materiales, texturas, atmósferas, fondo espacial, órbitas y controles de cámara.
 - Gestión de estado con React Context y hooks personalizados.
 - Patrones de interacción responsive para desktop y móvil.
-- Overlays DOM sobre WebGL para efectos ligeros como cometas fugaces.
-- Cuidado de UI/UX: tour guiado, modales, drawers, hover states, estados activos, z-index, scroll interno y etiquetas de accesibilidad.
+- Overlays DOM sobre WebGL para efectos ligeros como cometas fugaces, independientes del fondo 3D.
+- Cuidado de UI/UX: tour guiado, modales, drawers, botones flotantes móviles, hover states, estados activos, z-index, scroll interno y etiquetas de accesibilidad.
 - Internacionalización ES/EN sin añadir dependencias innecesarias.
 
 ## Calidad frontend
 
 - Tour guiado con cámara animada y seguimiento en vivo del planeta mientras orbita.
+- UX móvil pensada para no invadir la escena: la selección de planetas no abre automáticamente la ficha, y los accesos a info/lista quedan disponibles arriba.
 - Microinteracciones UI con transiciones, estados activos y `prefers-reduced-motion`.
+- Realismo ligero orientado a portfolio: halo del Sol con sprite radial, atmósferas no intrusivas y materiales ajustados sin añadir modelos pesados.
+- Fondo de espacio renderizado como esfera invertida dentro del Canvas para ganar profundidad sin depender de miles de puntos 3D.
 - Accesibilidad aplicada en puntos clave: `Escape` para cerrar capas, foco visible, `aria-label`, `aria-current`, idioma dinámico y skip link.
 - Performance visual cuidada: DPR adaptativo, estrellas reducidas en móvil, overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
 - Separación clara entre escena WebGL (`Scene`), UI (`UI`), estado (`context`), hooks y datos.
@@ -111,7 +115,7 @@ pnpm preview
 - Más información e interacciones para lunas.
 - Presets de cámara más cinematográficos.
 - Más división de bundle para optimizar la escena Three.js.
-- Ajustes visuales adicionales para densidad de estrellas, cometas y escalas.
+- Texturas optimizadas adicionales para mejorar el realismo de planetas sin comprometer la fluidez.
 
 ## Sobre el proyecto
 

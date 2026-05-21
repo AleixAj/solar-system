@@ -249,7 +249,7 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
             </div>
           </div>
 
-          {/* Footer: móvil — dos botones a mitad y mitad; sm+ — fila con más aire */}
+          {/* Footer adapts from two equal mobile actions to a roomier desktop row. */}
           <div className="flex shrink-0 border-t border-zinc-700 bg-zinc-950 px-4 py-4 sm:px-8 sm:py-6">
             <div className="flex w-full gap-2 sm:justify-between sm:gap-4">
               <a

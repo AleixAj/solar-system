@@ -61,8 +61,6 @@ export const SolarSystemCanvas = ({
         ref={controlsRef}
         enableDamping
         dampingFactor={0.05}
-        autoRotate
-        autoRotateSpeed={0.5}
         minDistance={50}
         maxDistance={1400}
       />

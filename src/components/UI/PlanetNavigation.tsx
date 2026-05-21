@@ -119,17 +119,25 @@ export const PlanetNavigation = memo(({
       {/* Small author credit, moved out of the header to keep the top bar clean. */}
       <div className="border-t border-zinc-800 p-4">
         <div className="flex items-center justify-center gap-3 rounded-2xl bg-zinc-950/70 px-3 py-2 text-xs text-zinc-500">
-          <img
-            src="/AJ.png"
-            alt=""
-            aria-hidden="true"
-            className="h-7 w-7 object-contain"
-          />
+          <a
+            href="https://aleixaj.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open Aleix portfolio"
+            className="shrink-0 rounded-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-offset-4 active:scale-95"
+          >
+            <img
+              src="/AJ.png"
+              alt=""
+              aria-hidden="true"
+              className="h-7 w-7 object-contain"
+            />
+          </a>
           <span className="min-w-0">
             {t('craftedWith')}{' '}
             <span className="font-medium text-zinc-300">Three.js</span>{' '}
             {t('craftedBy')}{' '}
-            <span className="font-semibold text-white">Aleix</span>
+            <span className="font-semibold text-white">Aleix Auqué</span>
           </span>
         </div>
       </div>

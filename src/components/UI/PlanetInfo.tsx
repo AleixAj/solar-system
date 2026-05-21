@@ -4,7 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 
 interface PlanetInfoProps {
   planet: Planet | null;
-  /** Solo oculta el panel; el planeta sigue seleccionado (p. ej. FAB para volver a abrir). */
+  /** Hides the panel while keeping the planet selected so the mobile FAB can reopen it. */
   onCollapse?: () => void;
   onClose: () => void;
 }
@@ -77,7 +77,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
             <button
               type="button"
               onClick={onCollapse}
-              className="flex h-8 w-8 items-center justify-center rounded-xl text-lg leading-none text-zinc-400 transition-all hover:-translate-y-0.5 hover:bg-zinc-900 hover:text-white active:scale-95 md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-2xl text-2xl leading-none text-zinc-300 transition-all hover:-translate-y-0.5 hover:bg-zinc-900 hover:text-white active:scale-95 md:hidden"
               aria-label={t('hidePlanetInfo')}
             >
               ▾

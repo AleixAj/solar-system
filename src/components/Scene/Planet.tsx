@@ -1,7 +1,7 @@
 import { useRef, Suspense, useState, memo, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useTexture, Html } from "@react-three/drei";
-import { Mesh, Group } from "three";
+import { AdditiveBlending, BackSide, DoubleSide, Mesh, Group } from "three";
 import type { Planet as PlanetType } from "../../types/planet";
 import { planets } from "../../data/planets";
 import { getOrbitRadius } from "../../utils/orbitUtils";
@@ -34,6 +34,73 @@ interface PlanetMeshProps {
   segments?: number;
 }
 
+function getSurfaceMaterial(planet: PlanetType, isSelected?: boolean) {
+  const selectedBoost = isSelected ? 0.055 : 0;
+
+  switch (planet.type) {
+    case "terrestrial":
+      return {
+        metalness: 0.02,
+        roughness: planet.id === "earth" ? 0.72 : 0.9,
+        emissiveIntensity: selectedBoost,
+      };
+    case "gas-giant":
+      return {
+        metalness: 0,
+        roughness: 0.82,
+        emissiveIntensity: 0.012 + selectedBoost,
+      };
+    case "ice-giant":
+      return {
+        metalness: 0,
+        roughness: 0.58,
+        emissiveIntensity: 0.025 + selectedBoost,
+      };
+    default:
+      return {
+        metalness: 0.05,
+        roughness: 0.75,
+        emissiveIntensity: selectedBoost,
+      };
+  }
+}
+
+function getAtmosphere(planet: PlanetType): { color: string; opacity: number; scale: number } | null {
+  switch (planet.id) {
+    case "earth":
+      return { color: "#5bbcff", opacity: 0.2, scale: 1.035 };
+    case "venus":
+      return { color: "#f5c66b", opacity: 0.12, scale: 1.025 };
+    case "mars":
+      return { color: "#e27b58", opacity: 0.08, scale: 1.02 };
+    case "uranus":
+      return { color: "#80f2ff", opacity: 0.1, scale: 1.025 };
+    case "neptune":
+      return { color: "#5c7cff", opacity: 0.12, scale: 1.025 };
+    default:
+      return null;
+  }
+}
+
+const AtmosphereShell = memo(({ planet, segments }: { planet: PlanetType; segments: number }) => {
+  const atmosphere = getAtmosphere(planet);
+  if (!atmosphere) return null;
+
+  return (
+    <mesh scale={atmosphere.scale}>
+      <sphereGeometry args={[planet.relativeSize, segments, segments]} />
+      <meshBasicMaterial
+        color={atmosphere.color}
+        transparent
+        opacity={atmosphere.opacity}
+        side={BackSide}
+        depthWrite={false}
+        blending={AdditiveBlending}
+      />
+    </mesh>
+  );
+});
+
 /** Inner mesh that loads and applies the planet texture via Suspense. */
 const PlanetTexturedMesh = ({
   planet,
@@ -45,6 +112,7 @@ const PlanetTexturedMesh = ({
   const meshRef = useRef<Mesh>(null);
   const texture = useTexture(planet.texture!);
   const { timeScale } = useSimulation();
+  const material = getSurfaceMaterial(planet, isSelected);
 
   useFrame((_, delta) => {
     if (meshRef.current) {
@@ -71,10 +139,11 @@ const PlanetTexturedMesh = ({
       <sphereGeometry args={[planet.relativeSize, segments, segments]} />
       <meshStandardMaterial
         map={texture}
-        metalness={0.1}
-        roughness={0.6}
-        emissive={isSelected ? planet.baseColor : "#000000"}
-        emissiveIntensity={0}
+        color="#f7f7f7"
+        metalness={material.metalness}
+        roughness={material.roughness}
+        emissive={planet.baseColor}
+        emissiveIntensity={material.emissiveIntensity}
       />
     </mesh>
   );
@@ -84,6 +153,7 @@ const PlanetTexturedMesh = ({
 const PlanetFallbackMesh = ({ planet, onSelect, onHover, segments = 32 }: PlanetMeshProps) => {
   const meshRef = useRef<Mesh>(null);
   const { timeScale } = useSimulation();
+  const material = getSurfaceMaterial(planet);
 
   useFrame((_, delta) => {
     if (meshRef.current) {
@@ -110,10 +180,10 @@ const PlanetFallbackMesh = ({ planet, onSelect, onHover, segments = 32 }: Planet
       <sphereGeometry args={[planet.relativeSize, segments, segments]} />
       <meshStandardMaterial
         color={planet.baseColor}
-        metalness={0.3}
-        roughness={0.6}
+        metalness={material.metalness}
+        roughness={material.roughness}
         emissive={planet.baseColor}
-        emissiveIntensity={0}
+        emissiveIntensity={material.emissiveIntensity}
       />
     </mesh>
   );
@@ -149,33 +219,30 @@ const SelectionArrow = memo(({ planet }: { planet: PlanetType }) => {
   );
 });
 
-/** Saturn's iconic ring system — two ring layers for a banded look. */
+/** Saturn's iconic ring system — several cheap transparent bands for a textured feel. */
 const SaturnRing = memo(({ planetRadius }: { planetRadius: number }) => {
-  const outerInner = planetRadius * 1.4;
-  const outerOuter = planetRadius * 2.2;
-  const innerInner = planetRadius * 1.1;
-  const innerOuter = planetRadius * 1.35;
   const tilt: [number, number, number] = [Math.PI / 2 - 0.47, 0, 0];
+  const bands = [
+    { inner: 1.12, outer: 1.28, color: "#f7e0a3", opacity: 0.48 },
+    { inner: 1.34, outer: 1.55, color: "#c8a46d", opacity: 0.58 },
+    { inner: 1.62, outer: 1.86, color: "#f0d89a", opacity: 0.5 },
+    { inner: 1.94, outer: 2.18, color: "#8f7654", opacity: 0.32 },
+  ];
+
   return (
     <group rotation={tilt}>
-      <mesh>
-        <ringGeometry args={[outerInner, outerOuter, 128]} />
-        <meshBasicMaterial
-          color="#d4b483"
-          transparent
-          opacity={0.82}
-          side={2}
-        />
-      </mesh>
-      <mesh>
-        <ringGeometry args={[innerInner, innerOuter, 128]} />
-        <meshBasicMaterial
-          color="#a89060"
-          transparent
-          opacity={0.55}
-          side={2}
-        />
-      </mesh>
+      {bands.map((band) => (
+        <mesh key={`${band.inner}-${band.outer}`}>
+          <ringGeometry args={[planetRadius * band.inner, planetRadius * band.outer, 160]} />
+          <meshBasicMaterial
+            color={band.color}
+            transparent
+            opacity={band.opacity}
+            side={DoubleSide}
+            depthWrite={false}
+          />
+        </mesh>
+      ))}
     </group>
   );
 });
@@ -288,6 +355,7 @@ export const Planet = memo(
           {planet.id === "saturn" && (
             <SaturnRing planetRadius={planet.relativeSize} />
           )}
+          <AtmosphereShell planet={planet} segments={sphereSegments} />
         </group>
         {satellitesToRender.map((satellite) => (
           <Satellite

@@ -1,7 +1,7 @@
-import { useRef, Suspense, memo, useState } from "react";
+import { useRef, Suspense, memo, useMemo, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Html, useTexture } from "@react-three/drei";
-import { Mesh } from "three";
+import { AdditiveBlending, CanvasTexture, Mesh } from "three";
 import { useSimulation } from "../../context/SimulationContext";
 import { useLanguage } from "../../context/LanguageContext";
 import type { Planet } from "../../types/planet";
@@ -11,6 +11,53 @@ interface SunProps {
   onSelect?: (planet: Planet) => void;
   onHover?: (hovered: boolean) => void;
 }
+
+const SunHalo = memo(({ radius }: { radius: number }) => {
+  const haloTexture = useMemo(() => {
+    const size = 256;
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+
+    const context = canvas.getContext("2d");
+    if (!context) return null;
+
+    // Radial alpha falloff keeps the glow soft instead of showing hard sphere edges.
+    const gradient = context.createRadialGradient(
+      size / 2,
+      size / 2,
+      size * 0.04,
+      size / 2,
+      size / 2,
+      size * 0.5,
+    );
+
+    gradient.addColorStop(0, "rgba(255, 248, 174, 0.65)");
+    gradient.addColorStop(0.25, "rgba(255, 183, 56, 0.34)");
+    gradient.addColorStop(0.55, "rgba(255, 119, 18, 0.14)");
+    gradient.addColorStop(1, "rgba(255, 119, 18, 0)");
+
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, size, size);
+
+    return new CanvasTexture(canvas);
+  }, []);
+
+  if (!haloTexture) return null;
+
+  return (
+    <sprite scale={[radius * 4.2, radius * 4.2, 1]}>
+      <spriteMaterial
+        map={haloTexture}
+        transparent
+        opacity={0.8}
+        depthWrite={false}
+        blending={AdditiveBlending}
+        toneMapped={false}
+      />
+    </sprite>
+  );
+});
 
 const SunTexturedMesh = ({ sun, onSelect, onHover }: SunProps) => {
   const meshRef = useRef<Mesh>(null);
@@ -129,6 +176,7 @@ export const Sun = memo(({ sun, onSelect }: SunProps) => {
 
   return (
     <>
+      <SunHalo radius={sun.relativeSize} />
       <Suspense fallback={<SunFallbackMesh sun={sun} onSelect={onSelect} onHover={setHovered} />}>
         <SunTexturedMesh sun={sun} onSelect={onSelect} onHover={setHovered} />
       </Suspense>
