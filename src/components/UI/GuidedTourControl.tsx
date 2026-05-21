@@ -87,33 +87,33 @@ export const GuidedTourControl = memo(({
   return (
     // Active state: lightweight transport controls for a cinematic walkthrough.
     <section
-      className="pointer-events-auto ui-panel-in fixed left-1/2 top-24 z-[65] w-[min(calc(100vw-1.5rem),28rem)] -translate-x-1/2 overflow-hidden rounded-3xl border border-yellow-400/30 bg-zinc-950/90 shadow-2xl shadow-yellow-500/10 backdrop-blur-xl"
+      className="pointer-events-auto ui-panel-in fixed bottom-3 left-1/2 z-[65] w-[min(calc(100vw-1rem),22rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-yellow-400/30 bg-zinc-950/90 shadow-2xl shadow-yellow-500/10 backdrop-blur-xl md:top-24 md:bottom-auto md:w-[min(calc(100vw-1.5rem),28rem)] md:rounded-3xl"
       aria-label={t("guidedTour")}
     >
-      <div className="flex items-center justify-between gap-3 border-b border-zinc-800 px-4 py-3">
+      <div className="flex items-center justify-between gap-3 border-b border-zinc-800 px-3 py-2.5 md:px-4 md:py-3">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="ui-soft-pulse flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-yellow-400 text-zinc-950 shadow-lg shadow-yellow-500/20">
-            <TourIcon className="h-5 w-5" />
+          <div className="ui-soft-pulse flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-yellow-400 text-zinc-950 shadow-lg shadow-yellow-500/20 md:h-9 md:w-9 md:rounded-2xl">
+            <TourIcon className="h-4 w-4 md:h-5 md:w-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-yellow-300">
+            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-yellow-300 md:text-[0.65rem] md:tracking-[0.24em]">
               {t("guidedTour")}
             </p>
-            <p className="truncate text-lg font-bold text-white">{currentName}</p>
+            <p className="truncate text-base font-bold text-white md:text-lg">{currentName}</p>
           </div>
         </div>
 
         <button
           type="button"
           onClick={onStop}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-2xl leading-none text-zinc-400 transition-all hover:rotate-90 hover:bg-zinc-900 hover:text-white active:scale-95"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-xl leading-none text-zinc-400 transition-all hover:rotate-90 hover:bg-zinc-900 hover:text-white active:scale-95 md:h-9 md:w-9 md:text-2xl"
           aria-label={t("stopGuidedTour")}
         >
           ×
         </button>
       </div>
 
-      <div className="grid gap-3 px-4 py-3">
+      <div className="grid gap-2.5 px-3 py-2.5 md:gap-3 md:px-4 md:py-3">
         <div className="h-1.5 overflow-hidden rounded-full bg-zinc-800">
           <div
             // Progress is driven by the current tour index, not time, so manual
@@ -123,7 +123,7 @@ export const GuidedTourControl = memo(({
           />
         </div>
 
-        <div className="grid grid-cols-[3rem_1fr_3rem] items-center gap-2">
+        <div className="grid grid-cols-[2.5rem_1fr_2.5rem] items-center gap-2 md:grid-cols-[3rem_1fr_3rem]">
           <span className="font-mono text-xs font-semibold text-zinc-400">
             {progress}
           </span>
@@ -132,7 +132,7 @@ export const GuidedTourControl = memo(({
             <button
               type="button"
               onClick={onPrevious}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 text-lg text-white transition-all hover:-translate-x-0.5 hover:border-yellow-400/60 hover:text-yellow-300 active:scale-95"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 text-lg text-white transition-all hover:-translate-x-0.5 hover:border-yellow-400/60 hover:text-yellow-300 active:scale-95 md:h-10 md:w-10"
               aria-label={t("previousTourStep")}
             >
               ‹
@@ -140,16 +140,16 @@ export const GuidedTourControl = memo(({
             <button
               type="button"
               onClick={onTogglePause}
-              className="flex h-10 w-12 items-center justify-center rounded-xl bg-white text-zinc-950 transition-all hover:-translate-y-0.5 hover:bg-yellow-300 active:scale-95"
+              className="flex h-9 w-11 items-center justify-center rounded-xl bg-white text-zinc-950 transition-all hover:-translate-y-0.5 hover:bg-yellow-300 active:scale-95 md:h-10 md:w-12"
               aria-label={paused ? t("resumeGuidedTour") : t("pauseGuidedTour")}
               title={paused ? t("resumeGuidedTour") : t("pauseGuidedTour")}
             >
-              {paused ? <PlayIcon className="h-5 w-5" /> : <PauseIcon className="h-5 w-5" />}
+              {paused ? <PlayIcon className="h-4 w-4 md:h-5 md:w-5" /> : <PauseIcon className="h-4 w-4 md:h-5 md:w-5" />}
             </button>
             <button
               type="button"
               onClick={onNext}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 text-lg text-white transition-all hover:translate-x-0.5 hover:border-yellow-400/60 hover:text-yellow-300 active:scale-95"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900 text-lg text-white transition-all hover:translate-x-0.5 hover:border-yellow-400/60 hover:text-yellow-300 active:scale-95 md:h-10 md:w-10"
               aria-label={t("nextTourStep")}
             >
               ›

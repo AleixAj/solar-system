@@ -116,9 +116,22 @@ export const PlanetNavigation = memo(({
         })}
       </div>
 
-      {/* Footer sutil */}
-      <div className="border-t border-zinc-800 p-4 text-center text-xs text-zinc-500">
-        {t('clickToExplore')}
+      {/* Small author credit, moved out of the header to keep the top bar clean. */}
+      <div className="border-t border-zinc-800 p-4">
+        <div className="flex items-center justify-center gap-3 rounded-2xl bg-zinc-950/70 px-3 py-2 text-xs text-zinc-500">
+          <img
+            src="/AJ.png"
+            alt=""
+            aria-hidden="true"
+            className="h-7 w-7 object-contain"
+          />
+          <span className="min-w-0">
+            {t('craftedWith')}{' '}
+            <span className="font-medium text-zinc-300">Three.js</span>{' '}
+            {t('craftedBy')}{' '}
+            <span className="font-semibold text-white">Aleix</span>
+          </span>
+        </div>
       </div>
     </nav>
 

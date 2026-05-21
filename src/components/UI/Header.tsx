@@ -5,32 +5,6 @@ interface HeaderProps {
   onOpenAbout: () => void;
 }
 
-const ThreeJsIcon = () => (
-  <svg
-    className="w-4 h-4"
-    viewBox="0 0 36 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <path
-      d="M18 1.5 L34.5 30.5 L1.5 30.5 Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M18 9 L26.25 23.5 L9.75 23.5 Z"
-      stroke="currentColor"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-      strokeOpacity="0.55"
-    />
-    <line x1="18" y1="1.5" x2="18" y2="30.5" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
-    <line x1="9.75" y1="16.5" x2="26.25" y2="16.5" stroke="currentColor" strokeWidth="1" strokeOpacity="0.3" />
-  </svg>
-);
-
 const SpainFlag = () => (
   <svg
     className="h-5 w-7 rounded-[3px] shadow-sm"
@@ -87,16 +61,6 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
         </div>
 
         <div className="flex flex-shrink-0 items-center gap-2 sm:gap-3">
-          <div className="hidden xl:flex items-center gap-2 text-xs text-zinc-500">
-            <span>{t('craftedWith')}</span>
-            <span className="flex items-center gap-1 text-zinc-400">
-              <ThreeJsIcon />
-              <span className="font-medium">Three.js</span>
-            </span>
-            <span>{t('craftedBy')}</span>
-            <span className="font-semibold text-white">Aleix</span>
-          </div>
-
           <div
             className="inline-flex items-center gap-1 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-1"
             role="group"

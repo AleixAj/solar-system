@@ -13,7 +13,6 @@ type TranslationKey =
   | "aboutTech"
   | "aboutViewCode"
   | "center"
-  | "clickToExplore"
   | "collapseSidebar"
   | "craftedBy"
   | "craftedWith"
@@ -62,7 +61,6 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     aboutTech: "Technologies",
     aboutViewCode: "View code on GitHub",
     center: "Center",
-    clickToExplore: "Click to explore",
     collapseSidebar: "Hide sidebar",
     craftedBy: "by",
     craftedWith: "Crafted with",
@@ -110,7 +108,6 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     aboutTech: "Tecnologías",
     aboutViewCode: "Ver código en GitHub",
     center: "Centro",
-    clickToExplore: "Haz click para explorar",
     collapseSidebar: "Ocultar panel lateral",
     craftedBy: "por",
     craftedWith: "Hecho con",

@@ -253,7 +253,7 @@ function App() {
             />
           )}
 
-          <TimeControl />
+          {!tourActive && <TimeControl />}
         </Suspense>
 
         <FloatingMenuButton
