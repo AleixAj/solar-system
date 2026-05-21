@@ -1,4 +1,4 @@
-import { memo, type FC } from 'react';
+import { memo, type FC, useEffect, useRef } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 
 const REACT_CYAN = '#61DAFB';
@@ -139,6 +139,13 @@ interface AboutModalProps {
 
 export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
   const { language, t } = useLanguage();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    // Move keyboard focus into the dialog as soon as it opens.
+    closeButtonRef.current?.focus();
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -166,9 +173,12 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
       role="dialog"
       aria-modal="true"
       aria-labelledby="about-modal-title"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') onClose();
+      }}
     >
       <div
-        className="my-auto flex w-full max-w-2xl max-h-[min(calc(100dvh-2rem),56rem)] flex-col overflow-hidden rounded-3xl border border-zinc-700 bg-zinc-900 shadow-2xl"
+        className="ui-panel-in my-auto flex w-full max-w-2xl max-h-[min(calc(100dvh-2rem),56rem)] flex-col overflow-hidden rounded-3xl border border-zinc-700 bg-zinc-900 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
           {/* Header del modal */}
@@ -178,8 +188,9 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
             </h2>
             <button
               type="button"
+              ref={closeButtonRef}
               onClick={onClose}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl leading-none text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-white"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl leading-none text-zinc-400 transition-all hover:rotate-90 hover:bg-zinc-800 hover:text-white active:scale-95"
               aria-label={t('aboutClose')}
             >
               ✕
@@ -196,7 +207,7 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
                 {TECH_BADGES.map(({ key, label, Icon }) => (
                   <span
                     key={key}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-zinc-800 px-3 py-2 pr-4 text-sm text-zinc-100"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-zinc-800 px-3 py-2 pr-4 text-sm text-zinc-100 transition-all duration-200 hover:-translate-y-0.5 hover:bg-zinc-700 hover:shadow-lg hover:shadow-black/20"
                   >
                     <Icon className="h-5 w-5 shrink-0" />
                     {label}
@@ -246,7 +257,7 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={t('aboutViewCode')}
-                className="inline-flex min-h-[48px] min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl border border-zinc-600 bg-zinc-800 px-3 py-3 text-sm font-semibold text-white transition-colors hover:border-zinc-500 hover:bg-zinc-700 sm:flex-none sm:px-5"
+                className="inline-flex min-h-[48px] min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl border border-zinc-600 bg-zinc-800 px-3 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-zinc-500 hover:bg-zinc-700 active:scale-[0.98] sm:flex-none sm:px-5"
               >
                 <GitHubIcon className="h-5 w-5 shrink-0 text-zinc-200" />
                 <span className="truncate">GitHub</span>
@@ -254,7 +265,7 @@ export const AboutModal = memo(({ isOpen, onClose }: AboutModalProps) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="inline-flex min-h-[48px] min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-yellow-400 px-3 py-3 text-sm font-semibold text-zinc-950 shadow-sm transition-colors hover:bg-yellow-300 active:scale-[0.98] sm:flex-none sm:px-6"
+                className="inline-flex min-h-[48px] min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl bg-yellow-400 px-3 py-3 text-sm font-semibold text-zinc-950 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-yellow-300 active:scale-[0.98] sm:flex-none sm:px-6"
               >
                 <CloseIcon className="h-5 w-5 shrink-0" />
                 <span className="truncate">{t('aboutClose')}</span>

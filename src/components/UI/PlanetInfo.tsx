@@ -29,7 +29,11 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
   const distanceMkm = (planet.distanceFromSun / 1e6).toFixed(1);
 
   return (
-    <div className="pointer-events-auto fixed inset-x-0 top-20 bottom-0 z-[60] flex w-full flex-col overflow-hidden border-l border-zinc-700 bg-zinc-950/95 shadow-2xl backdrop-blur-xl md:left-auto md:right-0 md:w-96 md:max-w-none">
+    <aside
+      className="pointer-events-auto ui-slide-left-in fixed inset-x-0 top-20 bottom-0 z-[60] flex w-full flex-col overflow-hidden border-l border-zinc-700 bg-zinc-950/95 shadow-2xl backdrop-blur-xl md:left-auto md:right-0 md:w-96 md:max-w-none"
+      aria-label={t('planetInfoPanel')}
+      aria-labelledby="planet-info-title"
+    >
       {/* Header */}
       <div
         className="flex items-center gap-3 border-b px-4 py-4 sm:px-6 sm:py-5 sm:gap-4"
@@ -57,6 +61,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
 
         <div className="min-w-0 flex-1">
           <h2
+            id="planet-info-title"
             className="text-2xl font-bold tracking-tighter sm:text-3xl"
             style={{ color: planet.baseColor }}
           >
@@ -72,7 +77,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
             <button
               type="button"
               onClick={onCollapse}
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-xl leading-none text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-xl text-xl leading-none text-zinc-400 transition-all hover:-translate-y-0.5 hover:bg-zinc-900 hover:text-white active:scale-95 md:hidden"
               aria-label={t('hidePlanetInfo')}
             >
               ▾
@@ -81,7 +86,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-2xl leading-none text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"
+            className="flex h-9 w-9 items-center justify-center rounded-xl text-2xl leading-none text-zinc-400 transition-all hover:rotate-90 hover:bg-zinc-900 hover:text-white active:scale-95"
             aria-label={t('aboutClose')}
           >
             ✕
@@ -95,26 +100,26 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
         <section>
           <h3 className="uppercase text-xs tracking-widest text-zinc-500 mb-4">{t('physicalData')}</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-zinc-900/50 rounded-3xl p-4">
+            <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
               <p className="text-xs text-zinc-400">{t('diameter')}</p>
               <p className="text-2xl font-semibold text-white mt-1">{planet.diameter.toLocaleString()} km</p>
             </div>
-            <div className="bg-zinc-900/50 rounded-3xl p-4">
+            <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
               <p className="text-xs text-zinc-400">{t('temperature')}</p>
               <p className="text-2xl font-semibold text-white mt-1">{planet.temperature} K</p>
             </div>
             {isStar ? (
-              <div className="bg-zinc-900/50 rounded-3xl p-4">
+              <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
                 <p className="text-xs text-zinc-400">{t('systemRole')}</p>
                 <p className="text-2xl font-semibold text-white mt-1">{t('center')}</p>
               </div>
             ) : (
-              <div className="bg-zinc-900/50 rounded-3xl p-4">
+              <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
                 <p className="text-xs text-zinc-400">{t('distanceFromSun')}</p>
                 <p className="text-2xl font-semibold text-white mt-1">{distanceMkm} M km</p>
               </div>
             )}
-            <div className="bg-zinc-900/50 rounded-3xl p-4">
+            <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
               <p className="text-xs text-zinc-400">{t('satellites')}</p>
               <p className="text-2xl font-semibold text-white mt-1">{planet.numberOfSatellites}</p>
             </div>
@@ -125,11 +130,11 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
         <section>
           <h3 className="uppercase text-xs tracking-widest text-zinc-500 mb-4">{t('motion')}</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-zinc-900/50 rounded-3xl p-4">
+            <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
               <p className="text-xs text-zinc-400">{t('rotationSpeed')}</p>
               <p className="text-2xl font-semibold text-white mt-1">{planet.rotationSpeed.toFixed(4)} rad/s</p>
             </div>
-            <div className="bg-zinc-900/50 rounded-3xl p-4">
+            <div className="rounded-3xl bg-zinc-900/50 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20">
               <p className="text-xs text-zinc-400">{t('orbitSpeed')}</p>
               <p className="text-2xl font-semibold text-white mt-1">{planet.orbitSpeed.toFixed(4)}</p>
             </div>
@@ -144,7 +149,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
               {planet.satellites.map((s) => (
                 <span
                   key={s.name}
-                  className="px-4 py-2 bg-zinc-900 text-zinc-300 text-sm rounded-2xl"
+                  className="rounded-2xl bg-zinc-900 px-4 py-2 text-sm text-zinc-300 transition-all duration-200 hover:-translate-y-0.5 hover:bg-zinc-800 hover:text-white"
                 >
                   {getSatelliteName(s)}
                 </span>
@@ -154,11 +159,11 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
         )}
 
         {/* Fun Fact */}
-        <section className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-6">
+        <section className="rounded-3xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-6 transition-all duration-300 hover:border-amber-400/30 hover:shadow-lg hover:shadow-amber-500/10">
           <h3 className="text-amber-400 text-sm font-medium mb-3">{t('didYouKnow')}</h3>
           <p className="text-zinc-300 leading-relaxed">{getPlanetFunFact(planet)}</p>
         </section>
       </div>
-    </div>
+    </aside>
   );
 });

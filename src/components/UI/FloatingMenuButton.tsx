@@ -34,9 +34,9 @@ export const FloatingMenuButton = memo(
         onClick={onClick}
         aria-label={getLabel(hasPlanetSelected, isOpen, t)}
         aria-expanded={isOpen}
-        className={`fixed left-4 top-20 z-[60] pointer-events-auto h-12 min-w-12 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/90 px-3 text-2xl text-white shadow-2xl shadow-black/50 backdrop-blur-md transition-all hover:border-yellow-400 hover:text-yellow-300 active:scale-95 md:hidden ${hasPlanetSelected && isOpen ? "max-md:hidden" : "flex"}`}
+        className={`fixed left-4 top-20 z-[60] pointer-events-auto h-12 min-w-12 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/90 px-3 text-2xl text-white shadow-2xl shadow-black/50 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-400 hover:text-yellow-300 active:scale-95 md:hidden ${hasPlanetSelected && isOpen ? "max-md:hidden" : "flex"}`}
       >
-        <span className="transition-transform duration-200">
+        <span className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}>
           {getIcon(hasPlanetSelected, isOpen)}
         </span>
       </button>

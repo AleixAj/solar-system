@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { Mesh } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { CameraController } from "./CameraController";
+import { INITIAL_CAMERA_POSITION } from "../../hooks/useCameraAnimation";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 import type { Planet } from "../../types/planet";
 
 interface SolarSystemCanvasProps {
@@ -24,8 +26,19 @@ export const SolarSystemCanvas = ({
 }: SolarSystemCanvasProps) => {
   const backgroundRef = useRef<Mesh>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isHighDpr = useMediaQuery("(min-resolution: 2dppx)");
+  const dpr = useMemo<[number, number]>(
+    () => (isMobile ? [1, 1.25] : isHighDpr ? [1, 1.6] : [1, 1.35]),
+    [isHighDpr, isMobile]
+  );
   const cameraConfig = useMemo(
-    () => ({ position: [0, 50, 100] as [number, number, number], fov: 75, near: 0.1, far: 100000 }),
+    () => ({
+      position: INITIAL_CAMERA_POSITION.toArray() as [number, number, number],
+      fov: 75,
+      near: 0.1,
+      far: 100000,
+    }),
     []
   );
 
@@ -33,7 +46,8 @@ export const SolarSystemCanvas = ({
     <Canvas
       className={className}
       camera={cameraConfig}
-      dpr={[1, 2]}
+      dpr={dpr}
+      performance={{ min: 0.5 }}
       style={{
         width: "100%",
         height: "100%",
@@ -50,7 +64,7 @@ export const SolarSystemCanvas = ({
         autoRotate
         autoRotateSpeed={0.5}
         minDistance={50}
-        maxDistance={650}
+        maxDistance={1400}
       />
 
       {/* Drives smooth camera transitions when selection changes */}

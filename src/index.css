@@ -16,6 +16,21 @@ html, body, #root {
   height: 100%;
 }
 
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #facc15;
+  outline-offset: 3px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.18);
+}
+
 /* Cometas fugaces (misma idea que mi-portfolio-3d / StarBackground + index.css) */
 @keyframes shootingStar {
   0% {
@@ -32,5 +47,60 @@ html, body, #root {
   100% {
     transform: translateX(520px);
     opacity: 0;
+  }
+}
+
+@keyframes ui-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ui-slide-left-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes ui-soft-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(250, 204, 21, 0.18);
+  }
+}
+
+.ui-panel-in {
+  animation: ui-panel-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ui-slide-left-in {
+  animation: ui-slide-left-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ui-soft-pulse {
+  animation: ui-soft-pulse 2.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Respect OS-level motion preferences while keeping the interface usable. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

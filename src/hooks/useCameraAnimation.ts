@@ -3,13 +3,13 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { Vector3 } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
-/** Initial camera position matching the Canvas camera setup. */
-export const INITIAL_CAMERA_POSITION = new Vector3(0, 50, 100);
+/** Initial overview camera position matching the Canvas camera setup. */
+export const INITIAL_CAMERA_POSITION = new Vector3(0, 360, 760);
 export const INITIAL_LOOK_AT = new Vector3(0, 0, 0);
 
 /** Original OrbitControls distance bounds (match SolarSystemCanvas defaults). */
 const DEFAULT_MIN_DISTANCE = 50;
-const DEFAULT_MAX_DISTANCE = 650;
+const DEFAULT_MAX_DISTANCE = 1400;
 
 /** Total animation duration in seconds. */
 const ANIMATION_DURATION = 1.4;
@@ -33,6 +33,7 @@ export interface UseCameraAnimationReturn {
     lookAt: Vector3,
     options?: MoveToOptions
   ) => void;
+  updateTarget: (position: Vector3, lookAt: Vector3) => void;
   resetView: () => void;
 }
 
@@ -74,7 +75,10 @@ export function useCameraAnimation(
     if (animStartTimeRef.current === null) {
       animStartTimeRef.current = state.clock.elapsedTime;
       startPositionRef.current = camera.position.clone();
-      startLookAtRef.current = currentLookAtRef.current.clone();
+      startLookAtRef.current = controlsRef.current
+        ? controlsRef.current.target.clone()
+        : currentLookAtRef.current.clone();
+      currentLookAtRef.current.copy(startLookAtRef.current);
     }
 
     const elapsed = state.clock.elapsedTime - animStartTimeRef.current;
@@ -108,6 +112,7 @@ export function useCameraAnimation(
         controlsRef.current.update();
       }
 
+      currentLookAtRef.current.copy(targetLookAtRef.current);
       animStartTimeRef.current = null;
       targetPositionRef.current = null;
       targetLookAtRef.current = null;
@@ -129,6 +134,7 @@ export function useCameraAnimation(
       animStartTimeRef.current = null;
 
       if (controlsRef.current) {
+        currentLookAtRef.current.copy(controlsRef.current.target);
         controlsRef.current.enabled = false;
         controlsRef.current.autoRotate = false;
       }
@@ -138,6 +144,16 @@ export function useCameraAnimation(
     [controlsRef]
   );
 
+  const updateTarget = useCallback((position: Vector3, lookAt: Vector3) => {
+    if (!targetPositionRef.current || !targetLookAtRef.current) return;
+
+    // During guided-tour flights, planets keep orbiting. Updating the target
+    // every frame prevents the camera from flying to a stale coordinate and
+    // then correcting with a visible "bounce" once the animation finishes.
+    targetPositionRef.current.copy(position);
+    targetLookAtRef.current.copy(lookAt);
+  }, []);
+
   const resetView = useCallback(() => {
     moveTo(INITIAL_CAMERA_POSITION.clone(), INITIAL_LOOK_AT.clone(), {
       minDistance: DEFAULT_MIN_DISTANCE,
@@ -145,5 +161,5 @@ export function useCameraAnimation(
     });
   }, [moveTo]);
 
-  return { isAnimating, moveTo, resetView };
+  return { isAnimating, moveTo, updateTarget, resetView };
 }

@@ -58,7 +58,7 @@ export const PlanetNavigation = memo(({
           aria-label={t("collapseSidebar")}
           aria-expanded={!collapsed}
           aria-controls="planet-navigation-panel"
-          className="flex h-9 w-9 shrink-0 items-center justify-center self-center rounded-xl border border-zinc-500 bg-zinc-800 text-zinc-100 shadow-sm transition-colors hover:border-yellow-400/70 hover:bg-zinc-700 hover:text-yellow-300"
+          className="flex h-9 w-9 shrink-0 items-center justify-center self-center rounded-xl border border-zinc-500 bg-zinc-800 text-zinc-100 shadow-sm transition-all hover:-translate-x-0.5 hover:border-yellow-400/70 hover:bg-zinc-700 hover:text-yellow-300 active:scale-95"
         >
           <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 6l-6 6 6 6" />
@@ -69,9 +69,10 @@ export const PlanetNavigation = memo(({
       {/* Overview Button */}
       <button
         onClick={onOverview}
-        className={`mx-4 mt-4 px-4 py-3 flex items-center gap-3 text-left rounded-2xl transition-all hover:bg-zinc-900 ${
+        aria-current={!selectedPlanet ? "true" : undefined}
+        className={`mx-4 mt-4 px-4 py-3 flex items-center gap-3 text-left rounded-2xl transition-all duration-300 hover:translate-x-1 hover:bg-zinc-900 ${
           !selectedPlanet
-            ? "bg-zinc-900 text-white shadow-inner"
+            ? "bg-zinc-900 text-white shadow-inner ring-1 ring-yellow-400/20"
             : "text-zinc-400 hover:text-white"
         }`}
       >
@@ -88,9 +89,10 @@ export const PlanetNavigation = memo(({
             <button
               key={planet.id}
               onClick={() => onSelectPlanet(planet)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all group ${
+              aria-current={isActive ? "true" : undefined}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 group hover:translate-x-1 ${
                 isActive
-                  ? "bg-zinc-900 shadow-inner"
+                  ? "bg-zinc-900 shadow-inner ring-1 ring-yellow-400/20"
                   : "hover:bg-zinc-900/70"
               }`}
             >
@@ -127,7 +129,7 @@ export const PlanetNavigation = memo(({
           aria-label={t("expandSidebar")}
           aria-expanded={false}
           aria-controls="planet-navigation-panel"
-          className="pointer-events-auto fixed left-0 top-20 z-[45] hidden h-12 w-9 items-center justify-center rounded-r-xl border border-l-0 border-zinc-500 bg-zinc-800/95 text-xl leading-none text-yellow-400 shadow-md backdrop-blur-sm transition-colors hover:border-yellow-400/60 hover:bg-zinc-700 hover:text-yellow-300 md:flex"
+          className="pointer-events-auto fixed left-0 top-20 z-[45] hidden h-12 w-9 items-center justify-center rounded-r-xl border border-l-0 border-zinc-500 bg-zinc-800/95 text-xl leading-none text-yellow-400 shadow-md backdrop-blur-sm transition-all hover:translate-x-0.5 hover:border-yellow-400/60 hover:bg-zinc-700 hover:text-yellow-300 active:scale-95 md:flex"
         >
           <span aria-hidden="true">›</span>
         </button>

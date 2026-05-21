@@ -24,12 +24,13 @@ Objetivos principales:
 - Mantener una interfaz limpia, responsive y fácil de navegar en desktop y móvil.
 - Estructurar el código con componentes reutilizables, datos tipados y hooks específicos.
 - Resolver la interacción entre UI DOM, contenido WebGL, overlays y controles de cámara.
-- Dejar el proyecto preparado para futuras mejoras como tour guiado, más detalle de lunas y modos de cámara cinematográficos.
+- Dejar el proyecto preparado para futuras mejoras como más detalle de lunas, modos de cámara cinematográficos y microinteracciones avanzadas.
 
 ## Características
 
 - Escena 3D interactiva del Sistema Solar con React Three Fiber.
 - Sol y planetas seleccionables, con transiciones de cámara y paneles contextuales.
+- Tour guiado/cinemático para recorrer automáticamente los principales astros.
 - Panel lateral desktop con navegación por astros, estado activo y modo colapsable.
 - Drawer móvil y botón flotante para navegar sin ocupar pantalla.
 - Panel de información por planeta con datos físicos, movimiento, lunas conocidas y curiosidades.
@@ -60,8 +61,31 @@ Objetivos principales:
 - Gestión de estado con React Context y hooks personalizados.
 - Patrones de interacción responsive para desktop y móvil.
 - Overlays DOM sobre WebGL para efectos ligeros como cometas fugaces.
-- Cuidado de UI/UX: modales, drawers, hover states, estados activos, z-index, scroll interno y etiquetas de accesibilidad.
+- Cuidado de UI/UX: tour guiado, modales, drawers, hover states, estados activos, z-index, scroll interno y etiquetas de accesibilidad.
 - Internacionalización ES/EN sin añadir dependencias innecesarias.
+
+## Calidad frontend
+
+- Tour guiado con cámara animada y seguimiento en vivo del planeta mientras orbita.
+- Microinteracciones UI con transiciones, estados activos y `prefers-reduced-motion`.
+- Accesibilidad aplicada en puntos clave: `Escape` para cerrar capas, foco visible, `aria-label`, `aria-current`, idioma dinámico y skip link.
+- Performance visual cuidada: DPR adaptativo, estrellas reducidas en móvil, overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
+- Separación clara entre escena WebGL (`Scene`), UI (`UI`), estado (`context`), hooks y datos.
+- Comentarios en inglés en las zonas de lógica más relevante para facilitar la revisión técnica del código.
+
+## Estructura del código
+
+```txt
+src/
+├── components/
+│   ├── Scene/       # Canvas, cámara, planetas, órbitas, luces y estrellas
+│   └── UI/          # Header, tour guiado, paneles, drawer, modal y controles
+├── context/         # Idioma e intensidad temporal de la simulación
+├── data/            # Datos tipados de planetas y satélites
+├── hooks/           # Animación de cámara, selección y helpers responsive
+├── styles/          # Variables y estilos globales
+└── utils/           # Utilidades de escena, escalado y órbitas
+```
 
 ## Desarrollo local
 
@@ -84,7 +108,7 @@ npm run preview
 
 ## Roadmap
 
-- Modo tour guiado para visitar automáticamente cada planeta.
+- Narrativa más rica para el tour guiado con textos específicos por planeta.
 - Modo pantalla completa y captura de pantalla.
 - Más información e interacciones para lunas.
 - Presets de cámara más cinematográficos.

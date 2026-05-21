@@ -1,4 +1,6 @@
 import { memo, useMemo } from "react";
+import { useIsMobile } from "../../hooks/useIsMobile";
+import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 /** Igual que en mi-portfolio-3d (`StarBackground.jsx`): valores estables entre renders. */
 function seededUnit(seed: number): number {
@@ -11,6 +13,8 @@ function rnd(seed: number, min: number, max: number): number {
 }
 
 export const ShootingStarOverlay = memo(() => {
+  const isMobile = useIsMobile();
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   /** Pocas trazas: en este proyecto el fondo ocupa mucho y 7 se notaba cargado. */
   const shootingStars = useMemo(
     () =>
@@ -26,6 +30,8 @@ export const ShootingStarOverlay = memo(() => {
       })),
     []
   );
+
+  if (isMobile || reduceMotion) return null;
 
   return (
     <div

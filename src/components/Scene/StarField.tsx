@@ -1,7 +1,9 @@
 import { memo, useMemo } from "react";
 import { BufferAttribute, BufferGeometry } from "three";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
-const STAR_COUNT = 1400;
+const DESKTOP_STAR_COUNT = 1400;
+const MOBILE_STAR_COUNT = 850;
 const FIELD_RADIUS = 9000;
 const FIELD_DEPTH = 1200;
 
@@ -17,11 +19,11 @@ function createSeededRandom(seed: number): () => number {
   };
 }
 
-function createStarGeometry(): BufferGeometry {
-  const positions = new Float32Array(STAR_COUNT * 3);
+function createStarGeometry(starCount: number): BufferGeometry {
+  const positions = new Float32Array(starCount * 3);
   const random = createSeededRandom(20260514);
 
-  for (let i = 0; i < STAR_COUNT; i += 1) {
+  for (let i = 0; i < starCount; i += 1) {
     const radius = FIELD_RADIUS - random() * FIELD_DEPTH;
     const theta = random() * Math.PI * 2;
     const phi = Math.acos(2 * random() - 1);
@@ -37,7 +39,9 @@ function createStarGeometry(): BufferGeometry {
 }
 
 export const StarField = memo(() => {
-  const geometry = useMemo(() => createStarGeometry(), []);
+  const isMobile = useIsMobile();
+  const starCount = isMobile ? MOBILE_STAR_COUNT : DESKTOP_STAR_COUNT;
+  const geometry = useMemo(() => createStarGeometry(starCount), [starCount]);
 
   return (
     <points geometry={geometry} frustumCulled={false}>

@@ -67,7 +67,7 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
       <div className="max-w-screen-2xl mx-auto px-3 py-3 sm:px-5 sm:py-4 lg:px-6 flex items-center justify-between gap-3 lg:gap-6">
         {/* Brand */}
         <div className="flex min-w-0 shrink items-center gap-x-1.5 sm:gap-x-3">
-          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-yellow-500 text-sm shadow-lg shadow-yellow-500/50 sm:h-8 sm:w-8 sm:text-xl">
+          <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-yellow-500 text-sm shadow-lg shadow-yellow-500/50 transition-transform duration-300 hover:rotate-12 hover:scale-105 sm:h-8 sm:w-8 sm:text-xl">
             ☀️
           </div>
           <div className="min-w-0 leading-none">
@@ -99,11 +99,12 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
 
           <div
             className="inline-flex items-center gap-1 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-1"
-            aria-label="Language selector"
+            role="group"
+            aria-label={t('languageSelector')}
           >
             <button
               onClick={() => setLanguage('es')}
-              className={`inline-flex h-8 w-9 sm:h-9 sm:w-10 items-center justify-center rounded-xl border text-lg transition-all ${
+              className={`inline-flex h-8 w-9 sm:h-9 sm:w-10 items-center justify-center rounded-xl border text-lg transition-all duration-300 hover:-translate-y-0.5 active:scale-95 ${
                 language === 'es'
                   ? 'border-yellow-400 bg-yellow-400/10 shadow-[0_0_12px_rgba(250,204,21,0.25)]'
                   : 'border-transparent bg-zinc-900/70 hover:border-zinc-600'
@@ -116,7 +117,7 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
             </button>
             <button
               onClick={() => setLanguage('en')}
-              className={`inline-flex h-8 w-9 sm:h-9 sm:w-10 items-center justify-center rounded-xl border text-lg transition-all ${
+              className={`inline-flex h-8 w-9 sm:h-9 sm:w-10 items-center justify-center rounded-xl border text-lg transition-all duration-300 hover:-translate-y-0.5 active:scale-95 ${
                 language === 'en'
                   ? 'border-yellow-400 bg-yellow-400/10 shadow-[0_0_12px_rgba(250,204,21,0.25)]'
                   : 'border-transparent bg-zinc-900/70 hover:border-zinc-600'
@@ -131,7 +132,8 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
 
           <button
             onClick={onOpenAbout}
-            className="inline-flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-semibold text-zinc-950 bg-yellow-400 hover:bg-yellow-300 border border-yellow-300 rounded-2xl shadow-lg shadow-yellow-500/20 active:scale-95 transition-all"
+            className="inline-flex items-center gap-2 px-3 py-2 sm:px-5 sm:py-2.5 text-sm font-semibold text-zinc-950 bg-yellow-400 hover:bg-yellow-300 border border-yellow-300 rounded-2xl shadow-lg shadow-yellow-500/20 active:scale-95 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-yellow-500/35"
+            aria-label={t('aboutButton')}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-zinc-950/70" />
             <span className="hidden sm:inline">{t('aboutButton')}</span>

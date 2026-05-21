@@ -259,7 +259,7 @@ export const Planet = memo(
           orbitRadius * Math.sin(angleRef.current),
         );
       }
-    });
+    }, -1);
 
     const meshProps: PlanetMeshProps = {
       planet,

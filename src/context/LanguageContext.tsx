@@ -21,7 +21,9 @@ type TranslationKey =
   | "didYouKnow"
   | "distanceFromSun"
   | "expandSidebar"
+  | "guidedTour"
   | "hidePlanetInfo"
+  | "languageSelector"
   | "interactiveSimulation"
   | "knownMoons"
   | "motion"
@@ -29,16 +31,25 @@ type TranslationKey =
   | "orbitSpeed"
   | "overview"
   | "pause"
+  | "pauseGuidedTour"
+  | "pauseTour"
   | "physicalData"
+  | "planetInfoPanel"
   | "planetNavAria"
+  | "previousTourStep"
   | "resume"
+  | "resumeGuidedTour"
+  | "resumeTour"
   | "rotationSpeed"
   | "satellites"
   | "showPlanetInfo"
   | "solarSystem"
   | "speed"
+  | "startGuidedTour"
+  | "stopGuidedTour"
   | "systemRole"
   | "temperature"
+  | "nextTourStep"
   | "viewing";
 
 const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
@@ -59,7 +70,9 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     didYouKnow: "Did you know?",
     distanceFromSun: "Distance from Sun",
     expandSidebar: "Show sidebar",
+    guidedTour: "Guided tour",
     hidePlanetInfo: "Hide planet info",
+    languageSelector: "Language selector",
     interactiveSimulation: "Interactive 3D Simulation",
     knownMoons: "Known Moons",
     motion: "Motion",
@@ -67,16 +80,25 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     orbitSpeed: "Orbit Speed",
     overview: "Overview",
     pause: "Pause simulation",
+    pauseGuidedTour: "Pause guided tour",
+    pauseTour: "Pause",
     physicalData: "Physical Data",
+    planetInfoPanel: "Planet information panel",
     planetNavAria: "Planets and overview navigation",
+    previousTourStep: "Previous tour step",
     resume: "Resume simulation",
+    resumeGuidedTour: "Resume guided tour",
+    resumeTour: "Resume",
     rotationSpeed: "Rotation Speed",
     satellites: "Satellites",
     showPlanetInfo: "Show planet info",
     solarSystem: "Solar System",
     speed: "SPEED",
+    startGuidedTour: "Start guided tour",
+    stopGuidedTour: "Stop guided tour",
     systemRole: "System Role",
     temperature: "Temperature",
+    nextTourStep: "Next tour step",
     viewing: "Viewing",
   },
   es: {
@@ -96,7 +118,9 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     didYouKnow: "¿Sabías que?",
     distanceFromSun: "Distancia al Sol",
     expandSidebar: "Mostrar panel lateral",
+    guidedTour: "Tour guiado",
     hidePlanetInfo: "Ocultar información",
+    languageSelector: "Selector de idioma",
     interactiveSimulation: "Simulación 3D interactiva",
     knownMoons: "Lunas conocidas",
     motion: "Movimiento",
@@ -104,16 +128,25 @@ const TRANSLATIONS: Record<Language, Record<TranslationKey, string>> = {
     orbitSpeed: "Velocidad orbital",
     overview: "Vista general",
     pause: "Pausar simulación",
+    pauseGuidedTour: "Pausar tour guiado",
+    pauseTour: "Pausar",
     physicalData: "Datos físicos",
+    planetInfoPanel: "Panel de información del astro",
     planetNavAria: "Navegación: planetas y vista general",
+    previousTourStep: "Paso anterior del tour",
     resume: "Reanudar simulación",
+    resumeGuidedTour: "Reanudar tour guiado",
+    resumeTour: "Reanudar",
     rotationSpeed: "Velocidad de rotación",
     satellites: "Satélites",
     showPlanetInfo: "Mostrar información",
     solarSystem: "Sistema Solar",
     speed: "VELOCIDAD",
+    startGuidedTour: "Iniciar tour guiado",
+    stopGuidedTour: "Cerrar tour guiado",
     systemRole: "Rol en el sistema",
     temperature: "Temperatura",
+    nextTourStep: "Siguiente paso del tour",
     viewing: "Viendo",
   },
 };

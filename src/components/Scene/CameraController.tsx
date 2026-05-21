@@ -47,11 +47,17 @@ export function CameraController({
   overviewTrigger,
 }: CameraControllerProps) {
   const { scene, camera } = useThree();
-  const { moveTo, resetView, isAnimating } = useCameraAnimation(controlsRef);
+  const { moveTo, updateTarget, resetView, isAnimating } = useCameraAnimation(controlsRef);
 
   const isFirstRender = useRef(true);
   /** Planet world-position recorded on the previous frame for delta calculation. */
   const prevPlanetPosRef = useRef<Vector3 | null>(null);
+  const currentPlanetPosRef = useRef(new Vector3());
+  const liveCameraTargetRef = useRef(new Vector3());
+  const orbitDeltaRef = useRef(new Vector3());
+  const correctionRef = useRef(new Vector3());
+  /** Planet id associated with prevPlanetPosRef. Prevents cross-planet deltas. */
+  const trackedPlanetIdRef = useRef<string | null>(null);
   /** Detects the frame the fly-to animation finishes. */
   const wasAnimatingRef = useRef(false);
   /**
@@ -68,10 +74,18 @@ export function CameraController({
 
     if (!selectedPlanet) {
       prevPlanetPosRef.current = null;
+      trackedPlanetIdRef.current = null;
       alignmentGapRef.current = null;
+      if (controlsRef.current) controlsRef.current.autoRotate = true;
       resetView();
       return;
     }
+
+    // A planet change starts a fresh fly-to. Keep the previous planet's orbit
+    // tracking delta from being applied to the new target for one frame.
+    prevPlanetPosRef.current = null;
+    trackedPlanetIdRef.current = selectedPlanet.id;
+    alignmentGapRef.current = null;
 
     const planetMesh = scene.getObjectByName(selectedPlanet.id);
     if (!planetMesh) return;
@@ -95,7 +109,9 @@ export function CameraController({
   useEffect(() => {
     if (overviewTrigger === 0) return;
     prevPlanetPosRef.current = null;
+    trackedPlanetIdRef.current = null;
     alignmentGapRef.current = null;
+    if (controlsRef.current) controlsRef.current.autoRotate = true;
     resetView();
   }, [overviewTrigger, resetView]);
 
@@ -103,28 +119,50 @@ export function CameraController({
     const animationJustEnded = wasAnimatingRef.current && !isAnimating;
     wasAnimatingRef.current = isAnimating;
 
-    if (isAnimating || !selectedPlanet || !controlsRef.current) return;
+    if (!selectedPlanet || !controlsRef.current) return;
+    controlsRef.current.autoRotate = false;
 
     const planetMesh = scene.getObjectByName(selectedPlanet.id);
     if (!planetMesh) return;
 
-    const currentPos = new Vector3();
+    const currentPos = currentPlanetPosRef.current;
     planetMesh.getWorldPosition(currentPos);
 
-    if (animationJustEnded || !prevPlanetPosRef.current) {
+    if (isAnimating) {
+      // Keep the animation destination attached to the moving planet. Without
+      // this, the camera would land where the planet was when the flight began.
+      const { lateral, vertical } = getCameraOffset(selectedPlanet);
+      liveCameraTargetRef.current.set(
+        currentPos.x + lateral,
+        currentPos.y + vertical,
+        currentPos.z + lateral
+      );
+      updateTarget(
+        liveCameraTargetRef.current,
+        currentPos
+      );
+      return;
+    }
+
+    if (
+      animationJustEnded ||
+      !prevPlanetPosRef.current ||
+      trackedPlanetIdRef.current !== selectedPlanet.id
+    ) {
       // The fly-to just landed. Record the gap between the camera's current
       // look-at (planet position at selection time) and where the planet
       // actually is now after orbiting during the animation. This will be
       // closed smoothly in subsequent frames instead of snapping instantly.
       alignmentGapRef.current = currentPos.clone().sub(controlsRef.current.target);
       prevPlanetPosRef.current = currentPos.clone();
+      trackedPlanetIdRef.current = selectedPlanet.id;
       return;
     }
 
     // ── Component 1: orbit tracking ──────────────────────────────────────────
     // Move target + camera by the same delta the planet travelled this frame
     // so the viewing angle and distance remain constant.
-    const orbitDelta = currentPos.clone().sub(prevPlanetPosRef.current);
+    const orbitDelta = orbitDeltaRef.current.copy(currentPos).sub(prevPlanetPosRef.current);
     if (orbitDelta.lengthSq() > 1e-8) {
       controlsRef.current.target.add(orbitDelta);
       camera.position.add(orbitDelta);
@@ -135,7 +173,7 @@ export function CameraController({
     // Runs in parallel with orbit tracking until the gap is negligible.
     if (alignmentGapRef.current && alignmentGapRef.current.lengthSq() > 1e-4) {
       const t = 1 - Math.exp(-delta * 6);
-      const correction = alignmentGapRef.current.clone().multiplyScalar(t);
+      const correction = correctionRef.current.copy(alignmentGapRef.current).multiplyScalar(t);
       controlsRef.current.target.add(correction);
       camera.position.add(correction);
       alignmentGapRef.current.sub(correction);
