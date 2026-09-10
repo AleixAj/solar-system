@@ -106,7 +106,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
             </div>
             <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
               <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('temperature')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{planet.temperature} K</p>
+              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{Math.round(planet.temperature - 273.15).toLocaleString()} °C</p>
             </div>
             {isStar ? (
               <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
