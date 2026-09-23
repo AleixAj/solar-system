@@ -7,6 +7,11 @@
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-9-61dafb?style=flat&logo=react&logoColor=111111)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38bdf8?style=flat&logo=tailwindcss&logoColor=white)
 
+<p>
+  <img src="docs/readme/lang-es-active.svg" alt="Español" width="170">
+  <a href="README.en.md"><img src="docs/readme/lang-en.svg" alt="English" width="170"></a>
+</p>
+
 Sistema Solar 3D interactivo construido como proyecto web personal.
 
 Solar Explorer combina una escena 3D en tiempo real, datos astronómicos y una interfaz cuidada para crear una forma inmersiva de explorar el Sistema Solar desde el navegador.
