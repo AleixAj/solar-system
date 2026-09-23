@@ -10,6 +10,7 @@
 <p>
   <a href="README.md"><img src="docs/readme/lang-es.svg" alt="Español" width="170"></a>
   <img src="docs/readme/lang-en-active.svg" alt="English" width="170">
+  <a href="README.ca.md"><img src="docs/readme/lang-ca.svg" alt="Català" width="170"></a>
 </p>
 
 Interactive 3D Solar System built as a personal web project.
@@ -43,7 +44,7 @@ Main goals:
 - Textured space background using an optimized image, subtle shooting comets in a CSS overlay and a mobile logo linking to the portfolio.
 - Lightweight visual realism with textures, materials per planet type, subtle atmospheres, a soft solar halo and banded rings for Saturn.
 - ES/EN language selector with persistent preference.
-- "About the project" modal with technologies, general structure and links.
+- "About this project" modal with technologies, general structure and links.
 - Dark, responsive UI built with Tailwind CSS.
 - Lazy-loaded panels and texture preloading for a smoother experience.
 
@@ -71,12 +72,12 @@ Main goals:
 ## Frontend quality
 
 - Guided tour with an animated camera and live tracking of the planet as it orbits.
-- Mobile UX designed not to crowd the scene: selecting a planet does not automatically open its info card, and the info/list shortcuts stay available at the top.
+- Mobile UX designed to keep the scene unobstructed: selecting a planet does not automatically open its info card, and the info/list shortcuts stay available at the top.
 - UI micro-interactions with transitions, active states and `prefers-reduced-motion`.
 - Lightweight, portfolio-oriented realism: Sun halo with a radial sprite, unobtrusive atmospheres and tuned materials without adding heavy models.
 - Space background rendered as an inverted sphere inside the Canvas to add depth without relying on thousands of 3D points.
 - Accessibility applied at key points: `Escape` to close layers, visible focus, `aria-label`, `aria-current`, dynamic language and a skip link.
-- Careful visual performance: adaptive DPR, fewer stars on mobile, decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
+- Attention to visual performance: adaptive DPR, fewer stars on mobile, decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
 - Clear separation between the WebGL scene (`Scene`), UI (`UI`), state (`context`), hooks and data.
 - English comments in the most relevant logic areas to make technical code review easier.
 

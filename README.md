@@ -10,6 +10,7 @@
 <p>
   <img src="docs/readme/lang-es-active.svg" alt="Español" width="170">
   <a href="README.en.md"><img src="docs/readme/lang-en.svg" alt="English" width="170"></a>
+  <a href="README.ca.md"><img src="docs/readme/lang-ca.svg" alt="Català" width="170"></a>
 </p>
 
 Sistema Solar 3D interactivo construido como proyecto web personal.
