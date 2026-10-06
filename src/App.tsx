@@ -1,4 +1,4 @@
-import { Suspense, useState, useCallback, useEffect, useMemo, lazy } from "react";
+import { Suspense, useState, useCallback, useEffect, lazy } from "react";
 import { SolarSystemCanvas } from "./components/Scene/SolarSystemCanvas";
 import { Lights } from "./components/Scene/Lights";
 import { Sun } from "./components/Scene/Sun";
@@ -10,9 +10,9 @@ import { ShootingStarOverlay } from "./components/UI/ShootingStarOverlay";
 import { FloatingMenuButton } from "./components/UI/FloatingMenuButton";
 import { GuidedTourControl } from "./components/UI/GuidedTourControl.tsx";
 import { PlanetDrawer } from "./components/UI/PlanetDrawer";
-import { LoadingOverlay } from "./components/UI/LoadingScreen";
+import { LoadingOverlay } from "./components/UI/LoadingOverlay";
 
-// Heavy UI panels are code-split so the initial WebGL scene can mount faster.
+// These panels are loaded on demand so the 3D scene can start sooner.
 const PlanetInfo = lazy(() =>
   import("./components/UI/PlanetInfo").then((m) => ({ default: m.PlanetInfo }))
 );
@@ -33,6 +33,17 @@ import { useIsMobile } from "./hooks/useIsMobile";
 import { getOrbitRadius } from "./utils/orbitUtils";
 import type { Planet as PlanetType } from "./types/planet";
 
+// The Sun sits in the same list as the planets so it can be selected and
+// translated the same way, but it does not orbit, so it is split out here.
+const sun = planets.find((p) => p.type === "star") ?? planets[0];
+const orbitingPlanets = planets.filter((p) => p.type !== "star");
+
+/**
+ * Puts the app together: the 3D canvas plus the UI layer on top of it.
+ *
+ * It also owns the state that several pieces share: which body is selected,
+ * which panels are open and where the guided tour is.
+ */
 function App() {
   const { getPlanetName, language, t } = useLanguage();
   const { selectedPlanet, selectPlanet, deselectPlanet } = usePlanetSelection();
@@ -46,20 +57,8 @@ function App() {
   const [tourPaused, setTourPaused] = useState(false);
   const [tourIndex, setTourIndex] = useState(0);
 
-  // The Sun is stored in the same data source as planets so it can share
-  // selection, translations and info-panel behaviour.
-  const sun = useMemo(
-    () => planets.find((p) => p.type === "star") ?? planets[0],
-    []
-  );
-  const planetsToRender = useMemo(
-    () => planets.filter((p) => p.type !== "star"),
-    []
-  );
-  const tourPlan = useMemo(() => planets, []);
-
-  // Centralized selection path used by manual navigation and the guided tour.
-  // Keeping this in one callback prevents UI layers from drifting out of sync.
+  // Single place where a body gets selected, used both by the menus and by the
+  // guided tour, so the panels never end up out of sync.
   const focusPlanet = useCallback((planet: PlanetType) => {
     selectPlanet(planet);
     setPanelVisible(!isMobile);
@@ -89,11 +88,11 @@ function App() {
   }, [deselectPlanet]);
 
   const focusTourStep = useCallback((index: number) => {
-    // Wrap around so the tour can loop indefinitely without extra boundary UI.
-    const nextIndex = (index + tourPlan.length) % tourPlan.length;
+    // Wrap around, so the tour loops and needs no start or end buttons.
+    const nextIndex = (index + planets.length) % planets.length;
     setTourIndex(nextIndex);
-    focusPlanet(tourPlan[nextIndex]);
-  }, [focusPlanet, tourPlan]);
+    focusPlanet(planets[nextIndex]);
+  }, [focusPlanet]);
 
   const startTour = useCallback(() => {
     setTourActive(true);
@@ -115,25 +114,24 @@ function App() {
   }, [focusTourStep, tourIndex]);
 
   useEffect(() => {
-    if (!tourActive || tourPaused || tourPlan.length === 0) return;
+    if (!tourActive || tourPaused) return;
 
-    // Auto-advance keeps the tour hands-free; users can still pause or step
-    // manually via the control panel.
+    // Move to the next body on its own. The buttons still work meanwhile.
     const timer = window.setTimeout(() => {
       focusTourStep(tourIndex + 1);
     }, 7200);
 
     return () => window.clearTimeout(timer);
-  }, [focusTourStep, tourActive, tourIndex, tourPaused, tourPlan.length]);
+  }, [focusTourStep, tourActive, tourIndex, tourPaused]);
 
   useEffect(() => {
-    // Keep the document language aligned with the UI language for screen readers.
+    // Keep <html lang> in sync with the UI language, for screen readers.
     document.documentElement.lang = language;
   }, [language]);
 
   useEffect(() => {
-    // Global Escape handling mirrors native app behaviour: close the topmost
-    // transient layer first, then fall back to hiding contextual panels.
+    // Escape closes the layer on top first: the modal, then the drawer, then
+    // the tour, and only then the info panel.
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
 
@@ -177,7 +175,7 @@ function App() {
         href="#scene-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[10000] focus:rounded-xl focus:bg-yellow-400 focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-zinc-950"
       >
-        {language === "es" ? "Saltar a la escena" : "Skip to scene"}
+        {t("skipToScene")}
       </a>
       <LoadingOverlay />
 
@@ -191,13 +189,13 @@ function App() {
           <SpaceBackdrop />
           <Lights />
           <Sun sun={sun} onSelect={handleSelectPlanet} />
-          {planetsToRender.map((planet) => (
+          {orbitingPlanets.map((planet) => (
             <Orbit
               key={`orbit-${planet.id}`}
               radius={getOrbitRadius(planet.distanceFromSun, planet.id)}
             />
           ))}
-          {planetsToRender.map((planet, index) => (
+          {orbitingPlanets.map((planet, index) => (
             <Planet
               key={planet.id}
               planet={planet}
@@ -209,16 +207,15 @@ function App() {
         </Suspense>
       </SolarSystemCanvas>
 
-      {/* Hidden landmark target for keyboard users using the skip link. */}
+      {/* Target of the skip link. Hidden, it only exists for keyboard users. */}
       <main id="scene-content" tabIndex={-1} className="sr-only">
-        {language === "es"
-          ? "Escena interactiva del Sistema Solar"
-          : "Interactive Solar System scene"}
+        {t("sceneDescription")}
       </main>
 
       <ShootingStarOverlay />
 
-      {/* UI is rendered above the Canvas with pointer-events opt-in per widget. */}
+      {/* UI layer over the canvas. It ignores clicks unless a widget opts in,
+          so dragging the camera still works through the empty areas. */}
       <div className="absolute inset-0 pointer-events-none">
         <Header onOpenAbout={() => setAboutOpen(true)} />
 
@@ -226,8 +223,8 @@ function App() {
           active={tourActive}
           paused={tourPaused}
           currentIndex={tourIndex}
-          total={tourPlan.length}
-          currentPlanet={tourPlan[tourIndex]}
+          total={planets.length}
+          currentPlanet={planets[tourIndex]}
           onStart={startTour}
           onStop={stopTour}
           onPrevious={previousTourStep}
@@ -275,7 +272,7 @@ function App() {
           href="https://aleixaj.com"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Abrir portfolio de Aleix"
+          aria-label={t("openPortfolio")}
           className="pointer-events-auto fixed bottom-3 right-3 z-30 flex h-11 w-11 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-950/80 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-yellow-400/70 hover:bg-zinc-900 active:scale-95 md:hidden"
         >
           <img

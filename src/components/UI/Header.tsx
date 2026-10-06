@@ -101,7 +101,7 @@ export const Header = memo(({ onOpenAbout }: HeaderProps) => {
           >
             <span className="w-1.5 h-1.5 rounded-full bg-zinc-950/70" />
             <span className="hidden sm:inline">{t('aboutButton')}</span>
-            <span className="sm:hidden">{language === 'es' ? 'Info' : 'Info'}</span>
+            <span className="sm:hidden">Info</span>
           </button>
         </div>
       </div>

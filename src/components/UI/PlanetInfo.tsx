@@ -1,10 +1,10 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import type { Planet } from '../../types/planet';
 import { useLanguage } from '../../context/LanguageContext';
 
 interface PlanetInfoProps {
   planet: Planet | null;
-  /** Hides the panel while keeping the planet selected so the mobile FAB can reopen it. */
+  /** Hides the panel but keeps the planet selected, so the mobile button can reopen it. */
   onCollapse?: () => void;
   onClose: () => void;
 }
@@ -13,20 +13,32 @@ const TYPE_ICONS: Record<Planet['type'], string> = {
   terrestrial: '🌍',
   'gas-giant': '🪐',
   'ice-giant': '🔵',
-  dwarf: '⚫',
   star: '⭐',
 };
 
+/** Shared look for the small data boxes: faint label, big value. */
+const StatCard = ({ label, value }: { label: string; value: string }) => (
+  <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
+    <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{label}</p>
+    <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{value}</p>
+  </div>
+);
+
+/** Side panel with the data of the selected planet. */
 export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps) => {
   const { getPlanetFunFact, getPlanetName, getSatelliteName, getTypeLabel, t } = useLanguage();
+  // Texture that failed to load, so the header can fall back to an icon.
+  const [brokenTexture, setBrokenTexture] = useState<string | null>(null);
 
   if (!planet) return null;
 
   const planetName = getPlanetName(planet);
-  const typeLabel = getTypeLabel(planet.type);
-  const typeIcon = TYPE_ICONS[planet.type] ?? '🌑';
+  const typeIcon = TYPE_ICONS[planet.type];
   const isStar = planet.type === 'star';
   const distanceMkm = (planet.distanceFromSun / 1e6).toFixed(1);
+  // Temperatures are stored in Kelvin, the panel shows Celsius.
+  const temperatureC = Math.round(planet.temperature - 273.15).toLocaleString();
+  const showTexture = planet.texture && brokenTexture !== planet.texture;
 
   return (
     <aside
@@ -39,24 +51,22 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
         className="flex items-center gap-3 border-b px-3 py-3 sm:px-6 sm:py-5 sm:gap-4"
         style={{ borderColor: planet.baseColor }}
       >
-        {/* Planet image / icon */}
         <div
           className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-2xl ring-2 ring-offset-2 ring-offset-zinc-950 sm:h-14 sm:w-14"
           style={{ borderColor: planet.baseColor }}
         >
-          <img
-            src={planet.texture}
-            alt={planetName}
-            className="h-full w-full object-cover"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const sibling = e.currentTarget.nextElementSibling as HTMLElement;
-              if (sibling) sibling.hidden = false;
-            }}
-          />
-          <span className="hidden flex h-full w-full items-center justify-center text-4xl" hidden>
-            {typeIcon}
-          </span>
+          {showTexture ? (
+            <img
+              src={planet.texture}
+              alt={planetName}
+              className="h-full w-full object-cover"
+              onError={() => setBrokenTexture(planet.texture ?? null)}
+            />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-4xl">
+              {typeIcon}
+            </span>
+          )}
         </div>
 
         <div className="min-w-0 flex-1">
@@ -68,7 +78,7 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
             {planetName}
           </h2>
           <span className="mt-1 inline-block rounded-full bg-zinc-900 px-2.5 py-0.5 text-[0.68rem] font-medium text-zinc-300 sm:px-3 sm:py-1 sm:text-xs">
-            {typeLabel}
+            {getTypeLabel(planet.type)}
           </span>
         </div>
 
@@ -96,52 +106,29 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
 
       {/* Content */}
       <div className="flex-1 space-y-5 overflow-y-auto p-3 sm:space-y-8 sm:p-6">
-        {/* Physical Data */}
         <section>
           <h3 className="mb-2 text-[0.65rem] uppercase tracking-widest text-zinc-500 sm:mb-4 sm:text-xs">{t('physicalData')}</h3>
           <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
-            <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-              <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('diameter')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{planet.diameter.toLocaleString()} km</p>
-            </div>
-            <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-              <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('temperature')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{Math.round(planet.temperature - 273.15).toLocaleString()} °C</p>
-            </div>
+            <StatCard label={t('diameter')} value={`${planet.diameter.toLocaleString()} km`} />
+            <StatCard label={t('temperature')} value={`${temperatureC} °C`} />
+            {/* The Sun has no distance to itself, so it shows its role instead. */}
             {isStar ? (
-              <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-                <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('systemRole')}</p>
-                <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{t('center')}</p>
-              </div>
+              <StatCard label={t('systemRole')} value={t('center')} />
             ) : (
-              <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-                <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('distanceFromSun')}</p>
-                <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{distanceMkm} M km</p>
-              </div>
+              <StatCard label={t('distanceFromSun')} value={`${distanceMkm} M km`} />
             )}
-            <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-              <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('satellites')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{planet.numberOfSatellites}</p>
-            </div>
+            <StatCard label={t('satellites')} value={`${planet.numberOfSatellites}`} />
           </div>
         </section>
 
-        {/* Motion */}
         <section>
           <h3 className="mb-2 text-[0.65rem] uppercase tracking-widest text-zinc-500 sm:mb-4 sm:text-xs">{t('motion')}</h3>
           <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
-            <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-              <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('rotationSpeed')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{planet.rotationSpeed.toFixed(4)} rad/s</p>
-            </div>
-            <div className="rounded-2xl bg-zinc-900/50 p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-zinc-900/80 hover:shadow-lg hover:shadow-black/20 sm:rounded-3xl sm:p-4">
-              <p className="text-[0.68rem] text-zinc-400 sm:text-xs">{t('orbitSpeed')}</p>
-              <p className="mt-1 text-lg font-semibold text-white sm:text-2xl">{planet.orbitSpeed.toFixed(4)}</p>
-            </div>
+            <StatCard label={t('rotationSpeed')} value={`${planet.rotationSpeed.toFixed(4)} rad/s`} />
+            <StatCard label={t('orbitSpeed')} value={planet.orbitSpeed.toFixed(4)} />
           </div>
         </section>
 
-        {/* Satellites */}
         {planet.satellites && planet.satellites.length > 0 && (
           <section>
             <h3 className="mb-2 text-[0.65rem] uppercase tracking-widest text-zinc-500 sm:mb-4 sm:text-xs">{t('knownMoons')}</h3>
@@ -158,7 +145,6 @@ export const PlanetInfo = memo(({ planet, onCollapse, onClose }: PlanetInfoProps
           </section>
         )}
 
-        {/* Fun Fact */}
         <section className="rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-900 to-zinc-950 p-4 transition-all duration-300 hover:border-amber-400/30 hover:shadow-lg hover:shadow-amber-500/10 sm:rounded-3xl sm:p-6">
           <h3 className="mb-2 text-sm font-medium text-amber-400 sm:mb-3">{t('didYouKnow')}</h3>
           <p className="text-sm leading-relaxed text-zinc-300 sm:text-base">{getPlanetFunFact(planet)}</p>

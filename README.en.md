@@ -77,7 +77,7 @@ Main goals:
 - Lightweight, portfolio-oriented realism: Sun halo with a radial sprite, unobtrusive atmospheres and tuned materials without adding heavy models.
 - Space background rendered as an inverted sphere inside the Canvas to add depth without relying on thousands of 3D points.
 - Accessibility applied at key points: `Escape` to close layers, visible focus, `aria-label`, `aria-current`, dynamic language and a skip link.
-- Attention to visual performance: adaptive DPR, fewer stars on mobile, decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
+- Attention to visual performance: adaptive DPR, simpler spheres and moons on mobile, decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
 - Clear separation between the WebGL scene (`Scene`), UI (`UI`), state (`context`), hooks and data.
 - English comments in the most relevant logic areas to make technical code review easier.
 
@@ -86,13 +86,12 @@ Main goals:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, camera, planets, orbits, lights and stars
+│   ├── Scene/       # Canvas, camera, planets, orbits, lights and backdrop
 │   └── UI/          # Header, guided tour, panels, drawer, modal and controls
 ├── context/         # Language and simulation time intensity
 ├── data/            # Typed planet and satellite data
-├── hooks/           # Camera animation, selection and responsive helpers
-├── styles/          # Variables and global styles
-└── utils/           # Scene, scaling and orbit utilities
+├── hooks/           # Camera animation, movement, selection and responsive helpers
+└── utils/           # Orbit radius calculation
 ```
 
 ## Local development

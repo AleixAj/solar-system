@@ -77,7 +77,7 @@ Objetivos principales:
 - Realismo ligero orientado a portfolio: halo del Sol con sprite radial, atmósferas no intrusivas y materiales ajustados sin añadir modelos pesados.
 - Fondo de espacio renderizado como esfera invertida dentro del Canvas para ganar profundidad sin depender de miles de puntos 3D.
 - Accesibilidad aplicada en puntos clave: `Escape` para cerrar capas, foco visible, `aria-label`, `aria-current`, idioma dinámico y skip link.
-- Performance visual cuidada: DPR adaptativo, estrellas reducidas en móvil, overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
+- Performance visual cuidada: DPR adaptativo, esferas y lunas simplificadas en móvil, overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
 - Separación clara entre escena WebGL (`Scene`), UI (`UI`), estado (`context`), hooks y datos.
 - Comentarios en inglés en las zonas de lógica más relevante para facilitar la revisión técnica del código.
 
@@ -86,13 +86,12 @@ Objetivos principales:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, cámara, planetas, órbitas, luces y estrellas
+│   ├── Scene/       # Canvas, cámara, planetas, órbitas, luces y fondo
 │   └── UI/          # Header, tour guiado, paneles, drawer, modal y controles
 ├── context/         # Idioma e intensidad temporal de la simulación
 ├── data/            # Datos tipados de planetas y satélites
-├── hooks/           # Animación de cámara, selección y helpers responsive
-├── styles/          # Variables y estilos globales
-└── utils/           # Utilidades de escena, escalado y órbitas
+├── hooks/           # Animación de cámara, movimiento, selección y responsive
+└── utils/           # Cálculo de los radios de órbita
 ```
 
 ## Desarrollo local

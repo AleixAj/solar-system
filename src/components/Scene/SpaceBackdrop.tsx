@@ -16,8 +16,8 @@ export const SpaceBackdrop = memo(() => {
         map={texture}
         color="#4c5878"
         side={BackSide}
-        // Keep the backdrop opaque and darkened by tint only; transparency would
-        // blend over the whole scene and make planets look dimmer.
+        // The backdrop stays opaque and is only darkened by the color tint.
+        // Making it transparent would wash out the whole scene.
         depthWrite={false}
         toneMapped={false}
       />

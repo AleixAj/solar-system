@@ -2,22 +2,24 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 import type { ReactNode } from "react";
 
 interface SimulationContextValue {
-  /** Current time multiplier (0 when paused/stopped). Range: 0 – 10 */
+  /** Time multiplier used by the scene. It is 0 while paused. Range 0 to 10 */
   timeScale: number;
-  /** Update the time multiplier. Values are clamped to ≥ 0 */
+  /** Change the multiplier. Negative values are clamped to 0 */
   setTimeScale: (scale: number) => void;
   /** True while the simulation is paused */
   isPaused: boolean;
-  /** Pause the simulation (sets timeScale to 0 in consumers) */
-  pause: () => void;
-  /** Resume the simulation at the previous timeScale */
-  resume: () => void;
-  /** Toggle between paused and running */
+  /** Switch between paused and running */
   togglePause: () => void;
 }
 
 const SimulationContext = createContext<SimulationContextValue | null>(null);
 
+/**
+ * Holds the speed of the simulation.
+ *
+ * Everything that moves (planets, moons, spin) multiplies its own speed by
+ * timeScale, so pausing or speeding up the whole scene happens here.
+ */
 export const SimulationProvider = ({ children }: { children: ReactNode }) => {
   const [timeScale, setTimeScaleRaw] = useState(0.25);
   const [isPaused, setIsPaused] = useState(false);
@@ -26,20 +28,17 @@ export const SimulationProvider = ({ children }: { children: ReactNode }) => {
     setTimeScaleRaw(Math.max(0, scale));
   }, []);
 
-  const pause = useCallback(() => setIsPaused(true), []);
-  const resume = useCallback(() => setIsPaused(false), []);
   const togglePause = useCallback(() => setIsPaused((p) => !p), []);
 
   const value = useMemo(
     () => ({
+      // Pausing reports 0 but keeps the chosen speed, so resuming restores it.
       timeScale: isPaused ? 0 : timeScale,
       setTimeScale,
       isPaused,
-      pause,
-      resume,
       togglePause,
     }),
-    [isPaused, timeScale, setTimeScale, pause, resume, togglePause]
+    [isPaused, timeScale, setTimeScale, togglePause]
   );
 
   return (

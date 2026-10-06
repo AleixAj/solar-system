@@ -123,7 +123,7 @@ export const PlanetNavigation = memo(({
             href="https://aleixaj.com"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Open Aleix portfolio"
+            aria-label={t("openPortfolio")}
             className="shrink-0 rounded-lg transition-transform hover:-translate-y-0.5 focus-visible:outline-offset-4 active:scale-95"
           >
             <img

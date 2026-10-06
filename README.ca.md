@@ -77,7 +77,7 @@ Objectius principals:
 - Realisme lleuger orientat a portfolio: halo del Sol amb sprite radial, atmosferes no intrusives i materials ajustats sense afegir models pesants.
 - Fons espacial renderitzat com una esfera invertida dins del Canvas per guanyar profunditat sense dependre de milers de punts 3D.
 - Accessibilitat aplicada en punts clau: `Escape` per tancar capes, focus visible, `aria-label`, `aria-current`, idioma dinàmic i skip link.
-- Rendiment visual acurat: DPR adaptatiu, menys estrelles al mòbil, overlays decoratius desactivats amb `prefers-reduced-motion` i panells carregats a demanda.
+- Rendiment visual acurat: DPR adaptatiu, esferes i llunes simplificades al mòbil, overlays decoratius desactivats amb `prefers-reduced-motion` i panells carregats a demanda.
 - Separació clara entre l'escena WebGL (`Scene`), la UI (`UI`), l'estat (`context`), els hooks i les dades.
 - Comentaris en anglès a les zones de lògica més rellevants per facilitar la revisió tècnica del codi.
 
@@ -86,13 +86,12 @@ Objectius principals:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, càmera, planetes, òrbites, llums i estrelles
+│   ├── Scene/       # Canvas, càmera, planetes, òrbites, llums i fons
 │   └── UI/          # Header, tour guiat, panells, drawer, modal i controls
 ├── context/         # Idioma i intensitat temporal de la simulació
 ├── data/            # Dades tipades de planetes i satèl·lits
-├── hooks/           # Animació de càmera, selecció i helpers responsive
-├── styles/          # Variables i estils globals
-└── utils/           # Utilitats d'escena, escalat i òrbites
+├── hooks/           # Animació de càmera, moviment, selecció i responsive
+└── utils/           # Càlcul dels radis d'òrbita
 ```
 
 ## Desenvolupament local

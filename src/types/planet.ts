@@ -1,47 +1,49 @@
+/** Shapes of the data in src/data/planets.ts. */
+
 export interface Satellite {
-  /** Display name of the moon */
+  /** Name of the moon, shown in the UI */
   name: string;
-  /** Orbit radius in scene units relative to the planet's relativeSize */
+  /** Orbit radius as a multiple of the planet's relativeSize */
   orbitRadius: number;
-  /** Orbital speed in radians per simulation step */
+  /** Orbit speed in radians per simulation step */
   orbitSpeed: number;
   /** Sphere radius in scene units */
   size: number;
-  /** Path to texture file served from /public (e.g. "/textures/satellites/moon.jpg") */
+  /** Texture served from /public, for example "/textures/satellites/moon.jpg" */
   texturePath?: string;
-  /** Fallback color hex when no texture is provided */
+  /** Flat color used when there is no texture */
   color?: string;
 }
 
 export interface Planet {
-  /** Unique identifier used as the Three.js mesh name for scene lookups */
+  /** Unique id. Also used as the mesh name so the camera can find the body */
   id: string;
-  /** Display name shown in the UI */
+  /** English name. The Spanish one lives in LanguageContext */
   name: string;
   /** Equatorial diameter in kilometres */
   diameter: number;
   /** Mean distance from the Sun in kilometres */
   distanceFromSun: number;
-  /** Mean surface (or cloud-top) temperature in Kelvin */
+  /** Mean surface (or cloud top) temperature in Kelvin */
   temperature: number;
-  /** Number of known natural satellites */
+  /** Number of known moons, which is more than the ones drawn in the scene */
   numberOfSatellites: number;
-  /** Broad classification used to determine the nav icon */
-  type: "terrestrial" | "gas-giant" | "ice-giant" | "dwarf" | "star";
-  /** Short interesting fact shown at the bottom of the info panel */
+  /** Family of body. Decides the material and the label in the info panel */
+  type: "terrestrial" | "gas-giant" | "ice-giant" | "star";
+  /** Short fact shown at the bottom of the info panel */
   funFact: string;
-  /** Hex colour used for UI accents (name label, selection glow, dot) */
+  /** Color used for labels, dots and the selection glow */
   baseColor: string;
-  /** Radius in scene world units — does not correspond to real scale */
+  /** Sphere radius in scene units. Not the real scale, or planets would be dots */
   relativeSize: number;
-  /** Rotation speed in radians per simulation step (negative = retrograde) */
+  /** Spin speed in radians per simulation step. Negative spins backwards */
   rotationSpeed: number;
-  /** Axial tilt in degrees relative to the orbital plane */
+  /** Tilt of the axis in degrees */
   axialTilt: number;
-  /** Orbital speed in radians per simulation step */
+  /** Orbit speed in radians per simulation step */
   orbitSpeed: number;
-  /** Path to the texture file served from /public (e.g. "/textures/earth.jpg") */
+  /** Texture served from /public, for example "/textures/earth.jpg" */
   texture?: string;
-  /** Famous moons to render visually in the 3D scene */
+  /** Best known moons, the ones drawn in the scene */
   satellites?: Satellite[];
 }

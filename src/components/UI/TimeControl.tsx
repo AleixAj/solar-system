@@ -1,17 +1,16 @@
-import { useMemo, memo } from "react";
+import { memo } from "react";
 import { useSimulation } from "../../context/SimulationContext";
 import { useLanguage } from "../../context/LanguageContext";
 
+/** Speeds the slider can stop on. The slider value is the index in this list. */
 const SPEED_STEPS = [0, 0.25, 0.5, 1, 2, 5, 10];
 
 export const TimeControl = memo(() => {
   const { timeScale, setTimeScale, isPaused, togglePause } = useSimulation();
   const { t } = useLanguage();
 
-  const sliderIndex = useMemo(
-    () => Math.max(0, SPEED_STEPS.indexOf(timeScale)),
-    [timeScale]
-  );
+  // Fall back to the first step if the current speed is not one of the steps.
+  const sliderIndex = Math.max(0, SPEED_STEPS.indexOf(timeScale));
 
   return (
     <div className="pointer-events-auto ui-panel-in fixed bottom-3 left-1/2 z-40 flex max-w-[min(100vw-1rem,22rem)] -translate-x-1/2 items-center gap-2 rounded-2xl border border-zinc-700 bg-zinc-950/95 px-3 py-2 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-zinc-500 sm:bottom-6 sm:max-w-none sm:gap-3 sm:rounded-3xl sm:px-5 sm:py-3 md:bottom-8 md:gap-4 md:px-6">

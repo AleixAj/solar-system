@@ -2,10 +2,10 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useRef, useMemo } from "react";
 import type { ReactNode } from "react";
-import { Mesh } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { CameraController } from "./CameraController";
 import { INITIAL_CAMERA_POSITION } from "../../hooks/useCameraAnimation";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import type { Planet } from "../../types/planet";
 
@@ -24,9 +24,8 @@ export const SolarSystemCanvas = ({
   overviewTrigger,
   className,
 }: SolarSystemCanvasProps) => {
-  const backgroundRef = useRef<Mesh>(null);
   const controlsRef = useRef<OrbitControlsImpl>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useIsMobile();
   const isHighDpr = useMediaQuery("(min-resolution: 2dppx)");
   const dpr = useMemo<[number, number]>(
     () => (isMobile ? [1, 1.25] : isHighDpr ? [1, 1.6] : [1, 1.35]),
@@ -72,9 +71,8 @@ export const SolarSystemCanvas = ({
         overviewTrigger={overviewTrigger}
       />
 
-      {/* Background plane to capture deselection clicks */}
+      {/* Big invisible plane behind the scene: clicking it clears the selection. */}
       <mesh
-        ref={backgroundRef}
         position={[0, 0, -500]}
         onClick={onBackgroundClick}
       >
@@ -82,7 +80,6 @@ export const SolarSystemCanvas = ({
         <meshBasicMaterial transparent opacity={0} colorWrite={false} depthWrite={false} />
       </mesh>
 
-      {/* Children components will be rendered here */}
       {children}
     </Canvas>
   );

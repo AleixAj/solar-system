@@ -12,11 +12,13 @@ interface CameraControllerProps {
   overviewTrigger: number;
 }
 
+/**
+ * How far the camera sits from a planet. Saturn needs more room because of
+ * its rings, and small planets get a minimum distance so they stay visible.
+ */
 function getCameraOffset(planet: Planet): { lateral: number; vertical: number } {
   const viewRadius =
-    planet.id === "saturn"
-      ? planet.relativeSize * 2.2
-      : planet.relativeSize;
+    planet.id === "saturn" ? planet.relativeSize * 2.2 : planet.relativeSize;
 
   const lateral = Math.max(viewRadius * 4.5 + 15, 30);
   const vertical = planet.relativeSize * 1.5;
@@ -25,21 +27,18 @@ function getCameraOffset(planet: Planet): { lateral: number; vertical: number } 
 }
 
 /**
- * Lives inside <Canvas> and drives camera animation + orbit tracking.
+ * Moves the camera when the selected planet changes.
  *
- * Follow behaviour after the fly-to animation lands is split into two
- * independent components applied every frame:
+ * It lives inside <Canvas> so it can run code on every frame. After the fly-to
+ * animation lands, two things happen on each frame:
  *
- * 1. Orbit tracking — the planet's frame-by-frame world-position delta is
- *    added to both the OrbitControls target and the camera so the viewing
- *    angle and distance are preserved as the planet moves.
+ * 1. Follow the orbit. The planet keeps moving, so the step it took is added
+ *    to the camera and to the point the camera looks at. That way the viewing
+ *    angle and the distance stay the same.
  *
- * 2. Alignment correction — the fly-to animation targets the planet's
- *    position at selection time, but the planet keeps orbiting during the
- *    1.4 s flight. When the animation lands there is a residual gap between
- *    the camera's look-at point and the planet's actual position. This gap
- *    is closed with an exponential ease-out over ~0.5 s so the camera drifts
- *    smoothly onto the planet instead of snapping.
+ * 2. Fix the aim. The flight was aimed at the spot where the planet was when
+ *    it got picked, and the planet moved during those 1.4 seconds. The gap
+ *    left over is closed in about half a second instead of jumping.
  */
 export function CameraController({
   controlsRef,
@@ -129,8 +128,8 @@ export function CameraController({
     planetMesh.getWorldPosition(currentPos);
 
     if (isAnimating) {
-      // Keep the animation destination attached to the moving planet. Without
-      // this, the camera would land where the planet was when the flight began.
+      // Keep the destination glued to the moving planet. Without this the
+      // camera would land where the planet was when the flight started.
       const { lateral, vertical } = getCameraOffset(selectedPlanet);
       liveCameraTargetRef.current.set(
         currentPos.x + lateral,
@@ -149,28 +148,24 @@ export function CameraController({
       !prevPlanetPosRef.current ||
       trackedPlanetIdRef.current !== selectedPlanet.id
     ) {
-      // The fly-to just landed. Record the gap between the camera's current
-      // look-at (planet position at selection time) and where the planet
-      // actually is now after orbiting during the animation. This will be
-      // closed smoothly in subsequent frames instead of snapping instantly.
+      // The flight just landed. Save how far the planet has moved away from
+      // the point the camera is looking at, to close it over the next frames.
       alignmentGapRef.current = currentPos.clone().sub(controlsRef.current.target);
       prevPlanetPosRef.current = currentPos.clone();
       trackedPlanetIdRef.current = selectedPlanet.id;
       return;
     }
 
-    // ── Component 1: orbit tracking ──────────────────────────────────────────
-    // Move target + camera by the same delta the planet travelled this frame
-    // so the viewing angle and distance remain constant.
+    // 1. Follow the orbit: move the camera and its look-at point by the same
+    // step the planet travelled this frame.
     const orbitDelta = orbitDeltaRef.current.copy(currentPos).sub(prevPlanetPosRef.current);
     if (orbitDelta.lengthSq() > 1e-8) {
       controlsRef.current.target.add(orbitDelta);
       camera.position.add(orbitDelta);
     }
 
-    // ── Component 2: alignment correction ────────────────────────────────────
-    // Exponential ease-out: factor 6 closes ~95 % of the gap in ~0.5 s.
-    // Runs in parallel with orbit tracking until the gap is negligible.
+    // 2. Fix the aim: close most of the leftover gap each frame, which lands
+    // on the planet in about half a second. Runs together with the step above.
     if (alignmentGapRef.current && alignmentGapRef.current.lengthSq() > 1e-4) {
       const t = 1 - Math.exp(-delta * 6);
       const correction = correctionRef.current.copy(alignmentGapRef.current).multiplyScalar(t);

@@ -2,11 +2,17 @@ import { useProgress } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+/**
+ * Full screen loader shown until the textures of the scene are ready.
+ *
+ * It is rendered in a portal on document.body so the rest of the UI can mount
+ * (and start loading) behind it.
+ */
 export const LoadingOverlay = () => {
   const { progress } = useProgress();
   const [visible, setVisible] = useState(true);
 
-  // Hide the static pre-loader from index.html
+  // Hide the plain HTML loader from index.html, this one replaces it.
   useEffect(() => {
     const preLoader = document.getElementById("pre-loader");
     if (preLoader) preLoader.style.display = "none";
