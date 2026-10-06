@@ -8,9 +8,9 @@ const FIELD_DEPTH = 1500;
 
 /** Layers of stars: a few big and bright ones, many small and faint ones. */
 const LAYERS = [
-  { seed: 20260514, count: 160, size: 2.6, opacity: 0.95, color: "#ffffff" },
-  { seed: 77010203, count: 650, size: 1.6, opacity: 0.75, color: "#dfe9ff" },
-  { seed: 31415926, count: 1600, size: 1.0, opacity: 0.5, color: "#cfd8ef" },
+  { seed: 20260514, count: 120, size: 2.6, opacity: 0.95, color: "#ffffff" },
+  { seed: 77010203, count: 420, size: 1.6, opacity: 0.75, color: "#dfe9ff" },
+  { seed: 31415926, count: 900, size: 1.0, opacity: 0.5, color: "#cfd8ef" },
 ];
 
 /** Spreads points evenly over a sphere around the scene. */

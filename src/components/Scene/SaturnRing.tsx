@@ -32,8 +32,7 @@ const FRAGMENT_SHADER = /* glsl */ `
 
   void main() {
     float radius = length(vLocalPosition);
-    float t = (radius - uInnerRadius) / (uOuterRadius - uInnerRadius);
-    if (t < 0.0 || t > 1.0) discard;
+    float t = clamp((radius - uInnerRadius) / (uOuterRadius - uInnerRadius), 0.0, 1.0);
 
     float bands =
       0.58 +
@@ -98,7 +97,7 @@ export const SaturnRing = memo(({ planetRadius }: { planetRadius: number }) => {
   return (
     <mesh ref={meshRef} rotation={[Math.PI / 2 - 0.47, 0, 0]}>
       <ringGeometry
-        args={[planetRadius * INNER_RATIO, planetRadius * OUTER_RATIO, 180, 8]}
+        args={[planetRadius * INNER_RATIO, planetRadius * OUTER_RATIO, 180, 2]}
       />
       <shaderMaterial
         vertexShader={VERTEX_SHADER}

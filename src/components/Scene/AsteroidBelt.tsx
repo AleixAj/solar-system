@@ -9,14 +9,14 @@ import { createSeededRandom } from "../../utils/seededRandom";
 const INNER_RADIUS = 180;
 const OUTER_RADIUS = 212;
 const HEIGHT = 7;
-const DESKTOP_COUNT = 1800;
-const MOBILE_COUNT = 500;
+const DESKTOP_COUNT = 900;
+const MOBILE_COUNT = 300;
 
 /**
  * Asteroid belt between Mars and Jupiter.
  *
  * All the rocks are the same low poly shape drawn with one instanced mesh, so
- * fifteen hundred of them still cost a single draw call. The whole belt turns
+ * nine hundred of them still cost a single draw call. The whole belt turns
  * as one group, which is enough to read as movement and costs nothing.
  */
 export const AsteroidBelt = memo(() => {

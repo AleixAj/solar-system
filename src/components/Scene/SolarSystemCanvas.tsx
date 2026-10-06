@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { Suspense, lazy, useRef, useMemo } from "react";
+import { OrbitControls, PerformanceMonitor } from "@react-three/drei";
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { CameraController } from "./CameraController";
@@ -30,10 +30,24 @@ export const SolarSystemCanvas = ({
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const isMobile = useIsMobile();
   const isHighDpr = useMediaQuery("(min-resolution: 2dppx)");
-  const dpr = useMemo<[number, number]>(
-    () => (isMobile ? [1, 1.25] : isHighDpr ? [1, 1.6] : [1, 1.35]),
-    [isHighDpr, isMobile]
-  );
+
+  // Turns true when the computer cannot keep a smooth frame rate. From then on
+  // the scene is drawn at a lower resolution, which is the cheapest thing to
+  // give away: fewer pixels to paint, same look.
+  const [struggling, setStruggling] = useState(false);
+  const onDecline = useCallback(() => {
+    // A tab in the background draws almost no frames, and that looks exactly
+    // like a slow computer. Only trust the measurement while it is on screen.
+    if (document.visibilityState !== "visible") return;
+    setStruggling(true);
+  }, []);
+
+  const dpr = useMemo<[number, number]>(() => {
+    if (struggling) return [0.6, 0.85];
+    if (isMobile) return [1, 1.1];
+    return isHighDpr ? [1, 1.4] : [1, 1.25];
+  }, [isHighDpr, isMobile, struggling]);
+
   const cameraConfig = useMemo(
     () => ({
       position: INITIAL_CAMERA_POSITION.toArray() as [number, number, number],
@@ -57,6 +71,10 @@ export const SolarSystemCanvas = ({
     >
       {/* Black space background */}
       <color attach="background" args={["#000000"]} />
+
+      {/* Watches the frame rate. If it drops, quality goes down once and stays
+          down, instead of flickering between settings. */}
+      <PerformanceMonitor bounds={() => [45, 60]} onDecline={onDecline} />
 
       {/* Orbit Controls for camera navigation */}
       <OrbitControls
@@ -86,7 +104,7 @@ export const SolarSystemCanvas = ({
       {children}
 
       {/* The glow around the Sun and the darkened corners are added after the
-          scene is drawn. Phones skip them: they cost too much there. */}
+          scene is drawn. Phones and slow computers skip them. */}
       {!isMobile && (
         <Suspense fallback={null}>
           <ScenePostProcessing />
