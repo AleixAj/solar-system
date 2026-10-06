@@ -14,7 +14,7 @@ export const SpaceBackdrop = memo(() => {
       <sphereGeometry args={[12000, 48, 32]} />
       <meshBasicMaterial
         map={texture}
-        color="#4c5878"
+        color="#5f6684"
         side={BackSide}
         // The backdrop stays opaque and is only darkened by the color tint.
         // Making it transparent would wash out the whole scene.

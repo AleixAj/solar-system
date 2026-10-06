@@ -1,37 +1,24 @@
 import { memo } from "react";
 
-export const Lights = memo(() => {
-  return (
-    <>
-      {/* Ambient light: main brightness source, keeps texture colors vivid. */}
-      <ambientLight intensity={1.8} />
+/**
+ * Lighting of the scene.
+ *
+ * Almost all the light comes from a single point at the Sun, so every planet
+ * has a lit side and a dark side with a real terminator between them. Its
+ * decay is turned off on purpose: with a real falloff Neptune would be pitch
+ * black at this scale. The faint ambient light only keeps the night side from
+ * going fully black.
+ */
+export const Lights = memo(() => (
+  <>
+    <ambientLight intensity={0.07} />
 
-      {/* Light at the Sun position, so planets are lit from the center. */}
-      <pointLight
-        position={[0, 0, 0]}
-        intensity={3}
-        distance={5000}
-        decay={0.8}
-        color="#fff5e0"
-      />
-
-      {/* Fill light so the dark side of a planet is not pure black. */}
-      <pointLight
-        position={[300, 150, -300]}
-        intensity={0.8}
-        color="#ffffff"
-        distance={4000}
-        decay={0.6}
-      />
-
-      {/* Second fill, from below, for planets on the far side of the Sun. */}
-      <pointLight
-        position={[-300, -100, 300]}
-        intensity={0.6}
-        color="#ffffff"
-        distance={4000}
-        decay={0.6}
-      />
-    </>
-  );
-});
+    <pointLight
+      position={[0, 0, 0]}
+      intensity={3.4}
+      distance={0}
+      decay={0}
+      color="#fff4e0"
+    />
+  </>
+));

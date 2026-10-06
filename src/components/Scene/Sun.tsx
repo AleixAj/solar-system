@@ -19,9 +19,11 @@ interface SunSphereProps extends SunProps {
 }
 
 /**
- * The Sun sphere. With its texture it is drawn as a lit surface that also
- * glows; while the texture loads it falls back to a flat yellow ball that
- * ignores the scene lights.
+ * The Sun sphere.
+ *
+ * It uses a material that ignores the scene lights, because the Sun is the
+ * light source: it must stay fully bright on every side. Tone mapping is off
+ * too, so it keeps its brightness and the bloom effect picks it up.
  */
 const SunSphere = ({ sun, onSelect, onHover, texture }: SunSphereProps) => {
   const meshRef = useSelfRotation(sun.rotationSpeed);
@@ -40,17 +42,13 @@ const SunSphere = ({ sun, onSelect, onHover, texture }: SunSphereProps) => {
       {...pointerCursorProps(onHover)}
     >
       <sphereGeometry args={[sun.relativeSize, 64, 64]} />
-      {texture ? (
-        <meshStandardMaterial
-          map={texture}
-          emissiveMap={texture}
-          emissive={sun.baseColor}
-          emissiveIntensity={0.6}
-          toneMapped={false}
-        />
-      ) : (
-        <meshBasicMaterial color={sun.baseColor} toneMapped={false} />
-      )}
+      <meshBasicMaterial
+        map={texture ?? null}
+        // Brighter than white on purpose: that is what makes the bloom
+        // effect treat the Sun as a light source.
+        color={texture ? "#ffffff" : sun.baseColor}
+        toneMapped={false}
+      />
     </mesh>
   );
 };

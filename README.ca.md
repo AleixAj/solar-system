@@ -42,7 +42,12 @@ Objectius principals:
 - Tooltips a l'escena amb dades ràpides.
 - Control de velocitat temporal de `0x` a `10x`, amb `0.25x` com a valor inicial.
 - Fons espacial texturitzat amb una imatge optimitzada, cometes fugaços subtils en un overlay CSS i logotip mòbil enllaçat al portfolio.
-- Realisme visual lleuger amb textures, materials per tipus de planeta, atmosferes subtils, halo solar difuminat i anells de Saturn per bandes.
+- Il·luminació realista: tota la llum surt del Sol, així que cada planeta té la cara de dia i la de nit.
+- Resplendor (bloom) al voltant del Sol i vinyetatge, només a escriptori.
+- Atmosferes amb shader propi que només brillen a la vora i a la cara il·luminada.
+- Anells de Saturn generats per shader, amb divisions i l'ombra del planeta projectada a sobre.
+- Cinturó d'asteroides entre Mart i Júpiter amb 1.800 roques en una sola crida de dibuix.
+- Estrelles en tres capes de mida i brillantor diferents sobre el fons espacial.
 - Selector d'idioma ES/EN amb preferència persistent.
 - Modal "Sobre el proyecto" (Sobre el projecte) amb tecnologies, estructura general i enllaços.
 - UI fosca i responsive construïda amb Tailwind CSS.
@@ -57,6 +62,7 @@ Objectius principals:
 - React Three Fiber
 - @react-three/drei
 - Tailwind CSS
+- @react-three/postprocessing
 
 ## Aspectes tècnics destacats
 
@@ -74,10 +80,10 @@ Objectius principals:
 - Tour guiat amb càmera animada i seguiment en directe del planeta mentre orbita.
 - UX mòbil pensada per no envair l'escena: la selecció de planetes no obre automàticament la fitxa, i els accessos a info/llista queden disponibles a dalt.
 - Microinteraccions d'UI amb transicions, estats actius i `prefers-reduced-motion`.
-- Realisme lleuger orientat a portfolio: halo del Sol amb sprite radial, atmosferes no intrusives i materials ajustats sense afegir models pesants.
-- Fons espacial renderitzat com una esfera invertida dins del Canvas per guanyar profunditat sense dependre de milers de punts 3D.
+- Realisme sense models pesants: la llum surt d'un sol punt, i atmosferes, anells i resplendor del Sol es dibuixen amb shaders, sprites i instàncies.
+- Fons espacial com una esfera invertida dins del Canvas, amb unes poques capes de punts a sobre per als estels propers.
 - Accessibilitat aplicada en punts clau: `Escape` per tancar capes, focus visible, `aria-label`, `aria-current`, idioma dinàmic i skip link.
-- Rendiment visual acurat: DPR adaptatiu, esferes i llunes simplificades al mòbil, overlays decoratius desactivats amb `prefers-reduced-motion` i panells carregats a demanda.
+- Rendiment visual acurat: DPR adaptatiu, esferes, llunes i asteroides simplificats al mòbil, efectes de postprocessat desactivats allà (i el seu codi ni tan sols es descarrega), overlays decoratius desactivats amb `prefers-reduced-motion` i panells carregats a demanda.
 - Separació clara entre l'escena WebGL (`Scene`), la UI (`UI`), l'estat (`context`), els hooks i les dades.
 - Comentaris en anglès a les zones de lògica més rellevants per facilitar la revisió tècnica del codi.
 
@@ -86,12 +92,12 @@ Objectius principals:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, càmera, planetes, òrbites, llums i fons
+│   ├── Scene/       # Canvas, càmera, planetes, òrbites, llums, fons i efectes
 │   └── UI/          # Header, tour guiat, panells, drawer, modal i controls
 ├── context/         # Idioma i intensitat temporal de la simulació
 ├── data/            # Dades tipades de planetes i satèl·lits
 ├── hooks/           # Animació de càmera, moviment, selecció i responsive
-└── utils/           # Càlcul dels radis d'òrbita
+└── utils/           # Radis d'òrbita i nombres aleatoris estables
 ```
 
 ## Desenvolupament local
@@ -119,7 +125,7 @@ pnpm preview
 - Mode de pantalla completa i captura de pantalla.
 - Més informació i interaccions per a les llunes.
 - Presets de càmera més cinematogràfics.
-- Més divisió del bundle per optimitzar l'escena de Three.js.
+- Continuar dividint el bundle de Three.js perquè la primera càrrega sigui més lleugera.
 - Textures optimitzades addicionals per millorar el realisme dels planetes sense comprometre la fluïdesa.
 
 ## Sobre el projecte

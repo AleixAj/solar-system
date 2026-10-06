@@ -42,7 +42,12 @@ Objetivos principales:
 - Tooltips en escena con datos rápidos.
 - Control de velocidad temporal de `0x` a `10x`, con `0.25x` como valor inicial.
 - Fondo espacial texturizado con una imagen optimizada, cometas fugaces sutiles en overlay CSS y logo móvil enlazado al portfolio.
-- Realismo visual ligero con texturas, materiales por tipo de planeta, atmósferas sutiles, halo solar difuminado y anillos de Saturno por bandas.
+- Iluminación realista: toda la luz sale del Sol, así que cada planeta tiene su cara de día y su cara de noche.
+- Resplandor (bloom) alrededor del Sol y viñeteado, solo en escritorio.
+- Atmósferas con shader propio que brillan únicamente en el borde y en la cara iluminada.
+- Anillos de Saturno generados por shader, con divisiones y la sombra del planeta proyectada sobre ellos.
+- Cinturón de asteroides entre Marte y Júpiter con 1.800 rocas en una sola instancia de dibujo.
+- Estrellas en tres capas de tamaño y brillo distintos sobre el fondo espacial.
 - Selector de idioma ES/EN con preferencia persistente.
 - Modal "Sobre el proyecto" con tecnologías, estructura general y enlaces.
 - UI oscura y responsive construida con Tailwind CSS.
@@ -57,6 +62,7 @@ Objetivos principales:
 - React Three Fiber
 - @react-three/drei
 - Tailwind CSS
+- @react-three/postprocessing
 
 ## Aspectos técnicos destacados
 
@@ -74,10 +80,10 @@ Objetivos principales:
 - Tour guiado con cámara animada y seguimiento en vivo del planeta mientras orbita.
 - UX móvil pensada para no invadir la escena: la selección de planetas no abre automáticamente la ficha, y los accesos a info/lista quedan disponibles arriba.
 - Microinteracciones UI con transiciones, estados activos y `prefers-reduced-motion`.
-- Realismo ligero orientado a portfolio: halo del Sol con sprite radial, atmósferas no intrusivas y materiales ajustados sin añadir modelos pesados.
-- Fondo de espacio renderizado como esfera invertida dentro del Canvas para ganar profundidad sin depender de miles de puntos 3D.
+- Realismo sin modelos pesados: la luz sale de un único punto, y atmósferas, anillos y resplandor del Sol se dibujan con shaders, sprites e instancias.
+- Fondo de espacio como esfera invertida dentro del Canvas, con unas pocas capas de puntos encima para las estrellas cercanas.
 - Accesibilidad aplicada en puntos clave: `Escape` para cerrar capas, foco visible, `aria-label`, `aria-current`, idioma dinámico y skip link.
-- Performance visual cuidada: DPR adaptativo, esferas y lunas simplificadas en móvil, overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
+- Performance visual cuidada: DPR adaptativo, esferas, lunas y asteroides simplificados en móvil, efectos de postprocesado desactivados ahí (y su código ni siquiera se descarga), overlays decorativos desactivados con `prefers-reduced-motion` y paneles cargados bajo demanda.
 - Separación clara entre escena WebGL (`Scene`), UI (`UI`), estado (`context`), hooks y datos.
 - Comentarios en inglés en las zonas de lógica más relevante para facilitar la revisión técnica del código.
 
@@ -86,12 +92,12 @@ Objetivos principales:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, cámara, planetas, órbitas, luces y fondo
+│   ├── Scene/       # Canvas, cámara, planetas, órbitas, luces, fondo y efectos
 │   └── UI/          # Header, tour guiado, paneles, drawer, modal y controles
 ├── context/         # Idioma e intensidad temporal de la simulación
 ├── data/            # Datos tipados de planetas y satélites
 ├── hooks/           # Animación de cámara, movimiento, selección y responsive
-└── utils/           # Cálculo de los radios de órbita
+└── utils/           # Radios de órbita y números aleatorios estables
 ```
 
 ## Desarrollo local
@@ -119,7 +125,7 @@ pnpm preview
 - Modo pantalla completa y captura de pantalla.
 - Más información e interacciones para lunas.
 - Presets de cámara más cinematográficos.
-- Más división de bundle para optimizar la escena Three.js.
+- Seguir dividiendo el bundle de Three.js para que la primera carga sea más ligera.
 - Texturas optimizadas adicionales para mejorar el realismo de planetas sin comprometer la fluidez.
 
 ## Sobre el proyecto

@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { useRef, useMemo } from "react";
+import { Suspense, lazy, useRef, useMemo } from "react";
 import type { ReactNode } from "react";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { CameraController } from "./CameraController";
@@ -8,6 +8,9 @@ import { INITIAL_CAMERA_POSITION } from "../../hooks/useCameraAnimation";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import type { Planet } from "../../types/planet";
+
+// Loaded apart so phones, which do not use the effects, never download them.
+const ScenePostProcessing = lazy(() => import("./ScenePostProcessing"));
 
 interface SolarSystemCanvasProps {
   children?: ReactNode;
@@ -81,6 +84,14 @@ export const SolarSystemCanvas = ({
       </mesh>
 
       {children}
+
+      {/* The glow around the Sun and the darkened corners are added after the
+          scene is drawn. Phones skip them: they cost too much there. */}
+      {!isMobile && (
+        <Suspense fallback={null}>
+          <ScenePostProcessing />
+        </Suspense>
+      )}
     </Canvas>
   );
 };

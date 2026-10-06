@@ -5,6 +5,8 @@ import { Sun } from "./components/Scene/Sun";
 import { Planet } from "./components/Scene/Planet";
 import { Orbit } from "./components/Scene/Orbit";
 import { SpaceBackdrop } from "./components/Scene/SpaceBackdrop";
+import { StarField } from "./components/Scene/StarField";
+import { AsteroidBelt } from "./components/Scene/AsteroidBelt";
 import { Header } from "./components/UI/Header";
 import { ShootingStarOverlay } from "./components/UI/ShootingStarOverlay";
 import { FloatingMenuButton } from "./components/UI/FloatingMenuButton";
@@ -187,12 +189,17 @@ function App() {
       >
         <Suspense fallback={null}>
           <SpaceBackdrop />
+          <StarField />
           <Lights />
+          <AsteroidBelt />
           <Sun sun={sun} onSelect={handleSelectPlanet} />
           {orbitingPlanets.map((planet) => (
             <Orbit
               key={`orbit-${planet.id}`}
               radius={getOrbitRadius(planet.distanceFromSun, planet.id)}
+              color={planet.baseColor}
+              // The orbit of the selected planet is brighter than the rest.
+              opacity={selectedPlanet?.id === planet.id ? 0.38 : 0.1}
             />
           ))}
           {orbitingPlanets.map((planet, index) => (

@@ -42,7 +42,12 @@ Main goals:
 - In-scene tooltips with quick facts.
 - Time speed control from `0x` to `10x`, with `0.25x` as the initial value.
 - Textured space background using an optimized image, subtle shooting comets in a CSS overlay and a mobile logo linking to the portfolio.
-- Lightweight visual realism with textures, materials per planet type, subtle atmospheres, a soft solar halo and banded rings for Saturn.
+- Realistic lighting: every bit of light comes from the Sun, so each planet has a day side and a night side.
+- Bloom around the Sun and a vignette, on desktop only.
+- Atmospheres with a custom shader that only glows on the rim and on the sunlit side.
+- Shader built Saturn rings, with gaps and the shadow the planet casts on them.
+- Asteroid belt between Mars and Jupiter with 1,800 rocks in a single draw call.
+- Stars in three layers of different size and brightness over the space backdrop.
 - ES/EN language selector with persistent preference.
 - "About this project" modal with technologies, general structure and links.
 - Dark, responsive UI built with Tailwind CSS.
@@ -57,6 +62,7 @@ Main goals:
 - React Three Fiber
 - @react-three/drei
 - Tailwind CSS
+- @react-three/postprocessing
 
 ## Technical highlights
 
@@ -74,10 +80,10 @@ Main goals:
 - Guided tour with an animated camera and live tracking of the planet as it orbits.
 - Mobile UX designed to keep the scene unobstructed: selecting a planet does not automatically open its info card, and the info/list shortcuts stay available at the top.
 - UI micro-interactions with transitions, active states and `prefers-reduced-motion`.
-- Lightweight, portfolio-oriented realism: Sun halo with a radial sprite, unobtrusive atmospheres and tuned materials without adding heavy models.
-- Space background rendered as an inverted sphere inside the Canvas to add depth without relying on thousands of 3D points.
+- Realism without heavy models: light from a single point, rim atmospheres, Saturn rings and the Sun glow are all drawn with shaders, sprites and instancing.
+- Space background as an inverted sphere inside the Canvas, with a few layers of points on top for the nearby stars.
 - Accessibility applied at key points: `Escape` to close layers, visible focus, `aria-label`, `aria-current`, dynamic language and a skip link.
-- Attention to visual performance: adaptive DPR, simpler spheres and moons on mobile, decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
+- Attention to visual performance: adaptive DPR, simpler spheres, moons and asteroids on mobile, postprocessing effects turned off there (their code is not even downloaded), decorative overlays disabled with `prefers-reduced-motion` and panels loaded on demand.
 - Clear separation between the WebGL scene (`Scene`), UI (`UI`), state (`context`), hooks and data.
 - English comments in the most relevant logic areas to make technical code review easier.
 
@@ -86,12 +92,12 @@ Main goals:
 ```txt
 src/
 ├── components/
-│   ├── Scene/       # Canvas, camera, planets, orbits, lights and backdrop
+│   ├── Scene/       # Canvas, camera, planets, orbits, lights, backdrop and effects
 │   └── UI/          # Header, guided tour, panels, drawer, modal and controls
 ├── context/         # Language and simulation time intensity
 ├── data/            # Typed planet and satellite data
 ├── hooks/           # Camera animation, movement, selection and responsive helpers
-└── utils/           # Orbit radius calculation
+└── utils/           # Orbit radii and stable random numbers
 ```
 
 ## Local development
@@ -119,7 +125,7 @@ pnpm preview
 - Fullscreen mode and screenshot capture.
 - More information and interactions for moons.
 - More cinematic camera presets.
-- Further bundle splitting to optimize the Three.js scene.
+- Keep splitting the Three.js bundle so the first load gets lighter.
 - Additional optimized textures to improve planet realism without compromising smoothness.
 
 ## About the project
