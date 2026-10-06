@@ -66,7 +66,9 @@ export const AsteroidBelt = memo(() => {
         frustumCulled={false}
       >
         <icosahedronGeometry args={[1, 0]} />
-        <meshStandardMaterial color="#9a8b79" roughness={1} metalness={0} flatShading />
+        {/* Dark and matte on purpose: a bright rock crosses the bloom
+            threshold and flickers as it moves. Real asteroids are dark too. */}
+        <meshStandardMaterial color="#5c5248" roughness={1} metalness={0} />
       </instancedMesh>
     </group>
   );

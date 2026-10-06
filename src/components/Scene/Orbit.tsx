@@ -29,7 +29,7 @@ export const Orbit = memo(({
     <Line
       points={points}
       color={color}
-      lineWidth={0.5}
+      lineWidth={1}
       transparent
       opacity={opacity}
     />
